@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>mac下tomcat安装与配置 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="背景首先说说为什么要在mac上安装tomcat。最近，在上一门软件测试技术的课，课上需要安装一个jfroum论坛进项测试，在本机上就需要安装一个服务器，所以使用的是tomcat。实验课上很快就安装完成，之后发现Windows平台的安装很简单，手里有一台mac，就想在自己的电脑上装一个，以后上实验课就带自己的电脑，毕竟实验室的电脑超级卡，浪费时间坐在实验室，还不如快点做完回去学习。遂开始安装，但是在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mac下tomcat安装与配置">
+<meta property="og:url" content="http://yoursite.com/2015/10/19/mac下tomcat安装与配置/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="背景首先说说为什么要在mac上安装tomcat。最近，在上一门软件测试技术的课，课上需要安装一个jfroum论坛进项测试，在本机上就需要安装一个服务器，所以使用的是tomcat。实验课上很快就安装完成，之后发现Windows平台的安装很简单，手里有一台mac，就想在自己的电脑上装一个，以后上实验课就带自己的电脑，毕竟实验室的电脑超级卡，浪费时间坐在实验室，还不如快点做完回去学习。遂开始安装，但是在">
+<meta property="og:updated_time" content="2016-03-06T16:34:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mac下tomcat安装与配置">
+<meta name="twitter:description" content="背景首先说说为什么要在mac上安装tomcat。最近，在上一门软件测试技术的课，课上需要安装一个jfroum论坛进项测试，在本机上就需要安装一个服务器，所以使用的是tomcat。实验课上很快就安装完成，之后发现Windows平台的安装很简单，手里有一台mac，就想在自己的电脑上装一个，以后上实验课就带自己的电脑，毕竟实验室的电脑超级卡，浪费时间坐在实验室，还不如快点做完回去学习。遂开始安装，但是在">
+  
+    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="overlay"></div>
+  <div id="header-outer" class="outer">
+    <div id="profile_img">
+      <img id="circle_img" src="holder.js/150x150" />
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-menu">
+      <nav id="main-nav">
+        <ul>
+        
+          <li><a href="/"><i class="fa fa-home icon-setting"></i></a></li>
+        
+          <li><a href="/archives"><i class="fa fa-archive icon-setting"></i></a></li>
+        
+          <li><a href="/about"><i class="fa fa-user icon-setting"></i></a></li>
+        
+        
+          <li><a href="/atom.xml"><i class="fa fa-rss %> icon-setting"></i></a></li>
+        
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-mac下tomcat安装与配置" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/10/19/mac下tomcat安装与配置/" class="article-date">
+  <time datetime="2015-10-19T09:14:26.000Z" itemprop="datePublished">2015-10-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/服务器/">服务器</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      mac下tomcat安装与配置
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>首先说说为什么要在mac上安装<code>tomcat</code>。最近，在上一门软件测试技术的课，课上需要安装一个<code>jfroum</code>论坛进项测试，在本机上就需要安装一个服务器，所以使用的是tomcat。实验课上很快就安装完成，之后发现<code>Windows</code>平台的安装很简单，手里有一台mac，就想在自己的电脑上装一个，以后上实验课就带自己的电脑，毕竟实验室的电脑超级卡，浪费时间坐在实验室，还不如快点做完回去学习。遂开始安装，但是在安装的过程中并不是那么简单的,下面就介绍一下安装的过程。  </p>
+<hr>
+<h1 id="1-处理资源包"><a href="#1-处理资源包" class="headerlink" title="1.处理资源包"></a>1.处理资源包</h1><p>首先需要已经安装<code>JDK</code>！！！这个到<a href="http://tomcat.apache.org" target="_blank" rel="external">apache官方主页</a>下载mac版本的文件包，可以选tar.gz格式的。下载完成之后解压，重命名为<code>Tomcat</code>并移动到<code>/Library</code>下面。如果在<code>Finder</code>中没有找到的话，可以按住<code>shift</code>+<code>command</code>+<code>G</code>这个组合键，在框里面输入<code>/</code>然后进入根目录，在里面找到<code>资源库</code>。注意的是，进行拷贝操作需要root权限，所以在此需要输入密码。  </p>
+<hr>
+<h1 id="2-修改文件权限"><a href="#2-修改文件权限" class="headerlink" title="2.修改文件权限"></a>2.修改文件权限</h1><p>打开电脑上自带的<code>终端</code>程序，在里面输入  </p>
+<pre><code>sudo chmod 755 /Library/Tomcat/bin/*.sh  
+</code></pre><p>将bin目录了下的shell脚本的权限修改，否则会因为权限不够而执行失败。此处也会提示输入密码。</p>
+<hr>
+<h1 id="3-启动Tomcat"><a href="#3-启动Tomcat" class="headerlink" title="3.启动Tomcat"></a>3.启动Tomcat</h1><p>在上一步执行成功之后，再在终端中输入以下命令  </p>
+<pre><code>cd /Library/Tomcat/bin  
+</code></pre><p>来切换到刚才复制文件的位置，在输入  </p>
+<pre><code>sudo sh startup.sh  
+</code></pre><p>若出现以下提示则表示安装并运行成功  </p>
+<pre><code>Using CATALINA_BASE:   /Library/Tomcat
+Using CATALINA_HOME:   /Library/Tomcat
+Using CATALINA_TMPDIR: /Library/Tomcat/temp
+Using JRE_HOME:        /Library/Java/JavaVirtualMachines/jdk1.8.0_20.jdk/Contents/Home
+Using CLASSPATH:       /Library/Tomcat/bin/bootstrap.jar:/Library/Tomcat/bin/tomcat-juli.jar
+Tomcat started.  
+</code></pre><hr>
+<h1 id="4-验证服务器是否运行"><a href="#4-验证服务器是否运行" class="headerlink" title="4.验证服务器是否运行"></a>4.验证服务器是否运行</h1><p>打开浏览器，输入<code>localhost:8080</code>回车，如果看到<code>Apache Tomcat</code>则表示运行成功！ </p>
+<hr>
+<h1 id="5-附加"><a href="#5-附加" class="headerlink" title="5.附加"></a>5.附加</h1><p>以上运行的一个叫<code>startup.sh</code>的shell脚本是每次开启服务器都需要运行的程序，如果在目录中每次斗殴输入绝对路径在运行的话稍显麻烦，得意与OS X系统的基于UNIX这一特性，加之又学习了Linux这个系统，就想起来把启动，停止和重启服务写成一个脚本。并且在<code>PATH</code>这个环境变量的路径中加入，以后就可以直接输入一个简单的命令来启动或停止服务器了。所编写的脚本如下：  </p>
+<pre><code>#!/bin/bash
+
+case $1 in
+    &quot;start&quot;)
+        sudo sh /Library/Tomcat/bin/startup.sh
+        echo -e &quot;\nHey!!! Dear mao.Tomcat Started!!!!&quot;
+    ;;
+    &quot;stop&quot;)
+        sh /Library/Tomcat/bin/shutdown.sh
+        echo -e &quot;\nHey!!! Dear mao.Tomcat Stopped!!!!&quot;
+    ;;
+    &quot;restart&quot;)
+        sh /Library/Tomcat/bin/shutdown.sh
+        sudo sh /Library/Tomcat/bin/startup.sh
+        echo -e &quot;\nHey!!! Dear mao.Tomcat Restarted!!!!&quot;
+    ;;
+    *)
+        echo -e &quot;\nUsage: start|stop|restart&quot;
+    ;;
+esac
+
+exit 0
+</code></pre><p>将上面的代码复制到文本编辑器，然后保存，这里建议使用<code>Sublime</code>，然后保存名字为<code>tomcat</code>不要大写，也不要后缀。然后再给文件赋予执行权限（首先切换到文件所在的目录）：  </p>
+<pre><code>chmod 777 tomcat  
+</code></pre><p>然后给这个文件移动到以下目录  </p>
+<pre><code>echo $PATH  
+/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/git/bin  
+</code></pre><p>目录是以：问分割的，推荐移动到<code>/usr/local/bin</code>目录了下，其他目录会需要root权限或者其他原因失败，如果不会在终端中移动文件，那就还是按住上述的组合键，输入目录之后，把文件拖拽进去。至此，就完成了脚本。下面可以试试命令：  </p>
+<p>1.tomcat start     启动服务<br>2.tomcat stop      停止服务<br>3.tomcat restart   重启服务</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/10/19/mac下tomcat安装与配置/" data-id="cip2t7v8400004g01c82cd9vn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/04/17/CentOS7上自定义系统服务/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          CentOS7上自定义系统服务
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/10/03/Windows配置hexo教程/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Windows配置hexo教程</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 John Doe<br>
+      <a href="https://github.com/ken8203/hexo-theme-alberta" target="_blank">Alberta</a> by <a href="http://jaychung.tw" target="_blank">jaychung</a>. Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Thank <a href="http://subtlepatterns.com/" target="_blank">Subtlepatterns</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="//imsky.github.io/holder/holder.js"></script>
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

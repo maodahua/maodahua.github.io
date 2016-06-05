@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>CentOS7上自定义系统服务 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="背景最近做一个项目需要在服务器上写一个socket程序的服务端来监听客户端发来的连接，如果有请求作出相应。写了一个demo之后发现一个问题，使用ssh登陆服务器（原来运行CentOS 6）运行我写的java文件之后，因为会阻塞，所以会卡在那里，不能执行其他命令。当然，需要做其他操作的时候，可以使用组合键Ctrl+Z来放到后台来执行其他命令，需要使用的时候可以使用fg命令来切换回后台程序。但是，我是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS7上自定义系统服务">
+<meta property="og:url" content="http://yoursite.com/2016/04/17/CentOS7上自定义系统服务/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="背景最近做一个项目需要在服务器上写一个socket程序的服务端来监听客户端发来的连接，如果有请求作出相应。写了一个demo之后发现一个问题，使用ssh登陆服务器（原来运行CentOS 6）运行我写的java文件之后，因为会阻塞，所以会卡在那里，不能执行其他命令。当然，需要做其他操作的时候，可以使用组合键Ctrl+Z来放到后台来执行其他命令，需要使用的时候可以使用fg命令来切换回后台程序。但是，我是">
+<meta property="og:updated_time" content="2016-04-17T07:34:55.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CentOS7上自定义系统服务">
+<meta name="twitter:description" content="背景最近做一个项目需要在服务器上写一个socket程序的服务端来监听客户端发来的连接，如果有请求作出相应。写了一个demo之后发现一个问题，使用ssh登陆服务器（原来运行CentOS 6）运行我写的java文件之后，因为会阻塞，所以会卡在那里，不能执行其他命令。当然，需要做其他操作的时候，可以使用组合键Ctrl+Z来放到后台来执行其他命令，需要使用的时候可以使用fg命令来切换回后台程序。但是，我是">
+  
+    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="overlay"></div>
+  <div id="header-outer" class="outer">
+    <div id="profile_img">
+      <img id="circle_img" src="holder.js/150x150" />
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-menu">
+      <nav id="main-nav">
+        <ul>
+        
+          <li><a href="/"><i class="fa fa-home icon-setting"></i></a></li>
+        
+          <li><a href="/archives"><i class="fa fa-archive icon-setting"></i></a></li>
+        
+          <li><a href="/about"><i class="fa fa-user icon-setting"></i></a></li>
+        
+        
+          <li><a href="/atom.xml"><i class="fa fa-rss %> icon-setting"></i></a></li>
+        
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-CentOS7上自定义系统服务" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/17/CentOS7上自定义系统服务/" class="article-date">
+  <time datetime="2016-04-17T06:20:23.000Z" itemprop="datePublished">2016-04-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/服务器/">服务器</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      CentOS7上自定义系统服务
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>最近做一个项目需要在服务器上写一个socket程序的服务端来监听客户端发来的连接，如果有请求作出相应。写了一个demo之后发现一个问题，使用<code>ssh</code>登陆服务器（原来运行<code>CentOS 6</code>）运行我写的java文件之后，因为会阻塞，所以会卡在那里，不能执行其他命令。当然，需要做其他操作的时候，可以使用组合键<code>Ctrl</code>+<code>Z</code>来放到后台来执行其他命令，需要使用的时候可以使用<code>fg</code>命令来切换回后台程序。但是，我是远程登陆的，肯定是要退出登陆的，及时程序在后台执行，退出的时候回提示有后台程序，一旦退出的话，程序也会跟着结束。所有有一个想法，给自己编写的程序写成一个系统的进程，最好能开机自动启动，这样就可以实现随时连接。  </p>
+<hr>
+<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><p><code>CentOS 7</code>这一发行版继承了<code>RHEL 7</code>的新的特性，例如强大的<code>systemctl</code>，而<code>systemctl</code>的使用也使得以往系统服务的<code>/etc/init.d</code>的启动脚本的方式因此改变，也大幅提高了系统服务的运行效率。但服务的配置和以往也发生了极大的不同，说实在的，变的简单而易用了许多。这也就是为什么这次选择<code>CentOS 7</code>而不是原来的6。所以第一步要做的就是确认系统的版本，我是重装了一个系统，然后配置好<code>FTP服务</code>和<code>JDK</code>。这两个服务的配置后面会有文章介绍的，他们不是今天的重点。  </p>
+<hr>
+<h1 id="进入正题"><a href="#进入正题" class="headerlink" title="进入正题"></a>进入正题</h1><p><code>CentOS 7</code>的服务<code>systemctl</code>脚本存放在<code>/usr/lib/systemd/</code>，有系统（<code>system</code>）和用户（<code>user</code>）之分，像需要开机不登陆就能运行的程序，还是存在系统服务里面比较好，也就是<code>/usr/lib/systemd/system</code>这个目录下。<br>每一个服务以<code>.service</code>结尾，一般会分为3部分：<code>[Unit]</code>、<code>[Service]</code>和<code>[Install]</code>，所谓我们也就要仿照这个格式来编写。下面是打开的系统里面一个名为<code>ntpdate.service</code>的服务：  </p>
+<pre><code>[Unit]
+Description=Set time via NTP
+After=syslog.target network.target nss-lookup.target
+Before=time-sync.target
+Wants=time-sync.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/ntpdate-wrapper
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target  
+</code></pre><hr>
+<h2 id="Unit"><a href="#Unit" class="headerlink" title="[Unit]"></a>[Unit]</h2><p>这个部分主要是对这个服务的说明，内容包括<code>Description</code>等选项，<code>Description</code>用于描述服务，<code>After</code>用于描述服务类别.典型的情况是，单元<code>A</code>要求单元<code>B</code>在<code>A</code>启动之前运行。在此情况下，向单元<code>A</code>配置文件中的<code>[Unit]</code>段添加<code>Requires=B</code>和<code>After=B</code>即可。若此依赖关系是可选的，可添加<code>Wants=B</code> 和<code>After=B</code>。请注意<code>Wants=</code>和<code>Requires=</code>并不意味着<code>After=</code>，即如果<code>After=</code>选项没有制定，这两个单元将被并行启动。  </p>
+<hr>
+<h2 id="Service"><a href="#Service" class="headerlink" title="[Service]"></a>[Service]</h2><p><code>[Service]</code>部分是服务的关键，是服务的一些具体运行参数的设置，这里<code>Type=</code>是运行的形式。包括以下一些选项：</p>
+<ul>
+<li><code>Type=simple（默认值）</code>：<code>systemd</code>认为该服务将立即启动。服务进程不会<code>fork</code>。如果该服务要启动其他服务，不要使用此类型启动，除非该服务是<code>socket</code>激活型。 </li>
+<li><code>Type=forking</code>：<code>systemd</code>认为当该服务进程<code>fork</code>，且父进程退出后服务启动成功。对于常规的守护进程<code>（daemon）</code>，除非你确定此启动方式无法满足需求，使用此类型启动即可。使用此启动类型应同时指定<code>PIDFile=</code>，以便<code>systemd</code>能够跟踪服务的主进程。 </li>
+<li><code>Type=oneshot</code>：这一选项适用于只执行一项任务、随后立即退出的服务。可能需要同时设置 <code>RemainAfterExit=yes</code>使得<code>systemd</code>在服务进程退出之后仍然认为服务处于激活状态。  </li>
+</ul>
+<p>以上列出一些了解的，其他的可以查看官方文档来了解。</p>
+<p><code>ExecStart</code>为服务的具体运行命令，<code>ExecReload</code>为重启命令，<code>ExecStop</code>为停止命令，<code>PrivateTmp=True</code>表示给服务分配独立的临时空间。<br><strong>注意</strong>：<code>[Service]</code>部分的启动、重启、停止命令全部要求使用<strong>绝对路径</strong>，使用相对路径则会报错！  </p>
+<h2 id="Install"><a href="#Install" class="headerlink" title="[Install]"></a>[Install]</h2><p>这个部分是服务安装的设置，可设置为多用户。如下：  </p>
+<pre><code>WantedBy=multi-user.target  
+</code></pre><h1 id="我的程序"><a href="#我的程序" class="headerlink" title="我的程序"></a>我的程序</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Test java socket server</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">ExecStart=/usr/java/jdk1.8.0_71/bin/java -jar /home/ftpmao/Server.jar</span><br><span class="line">PrivateTmp=true</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<p>经过以上的介绍，我想这个应该能看懂我编写的javasocket.service。服务脚本按照上面编写完成后，以<code>754</code>的权限保存在<code>/usr/lib/systemd/system</code>目录下，这时就可以利用<code>systemctl</code>进行配置了。可以使用  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start javasocket.service</span><br></pre></td></tr></table></figure>
+<p>测试服务是否可以成功运行,当然，除非运气好，不然不可能一次成功，这就涉及到了调试。  </p>
+<h1 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h1><p>当程序启动不正确的时候，可以使用  </p>
+<pre><code>systemctl status xxxx       
+</code></pre><p>这个命令来查看程序状态和出错的原因，找出原因就可以对症下药。<br><strong>注意</strong>：在<code>ExecStart</code>类似的几个后面只能写命令。重定向符号例如<code>&gt;&gt;</code>和逻辑运算符<code>&amp;</code>等会造成错误！  </p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>最后，也是我们的初衷，开机自启！使用  </p>
+<pre><code>systemctl enable xxxxx  
+</code></pre><p>就可以将所编写的服务添加至开机启动。至此大功告成。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/04/17/CentOS7上自定义系统服务/" data-id="cip2ta0p300004q01amlvxquk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/10/19/mac下tomcat安装与配置/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">mac下tomcat安装与配置</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 John Doe<br>
+      <a href="https://github.com/ken8203/hexo-theme-alberta" target="_blank">Alberta</a> by <a href="http://jaychung.tw" target="_blank">jaychung</a>. Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Thank <a href="http://subtlepatterns.com/" target="_blank">Subtlepatterns</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="//imsky.github.io/holder/holder.js"></script>
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
