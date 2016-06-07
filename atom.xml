@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>maodahua</title>
+  <subtitle>Write the code.</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2016-06-05T17:04:41.000Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>ML</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>原生安卓6.0“去感叹号”</title>
+    <link href="http://yoursite.com/2016/06/06/%E5%8E%9F%E7%94%9F%E5%AE%89%E5%8D%936-0%E2%80%9C%E5%8E%BB%E6%84%9F%E5%8F%B9%E5%8F%B7%E2%80%9D/"/>
+    <id>http://yoursite.com/2016/06/06/原生安卓6-0“去感叹号”/</id>
+    <published>2016-06-05T17:02:24.000Z</published>
+    <updated>2016-06-05T17:04:41.000Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;先说一点废话&quot;&gt;&lt;a href=&quot;#先说一点废话&quot; class=&quot;headerlink&quot; title=&quot;先说一点废话&quot;&gt;&lt;/a&gt;先说一点废话&lt;/h1&gt;&lt;p&gt;平时自己喜欢玩儿服务器，所以自己就买了一个AWS来搭建自己的VPN服务器，稳如狗，从来不掉线，就自己一个人使用全部的带宽，非常爽。说道为什么翻墙，那肯定是为了访问&lt;code&gt;Google&lt;/code&gt;，那么问题来了，谷歌一系列产品带来的良好的用户体验以及各种强大的功能让我爱不释手，自然想投靠谷歌了。然而手机上的手机却是&lt;code&gt;iPhone&lt;/code&gt;，所以立刻下定决心要换一个安卓的手机来用用，而且应该是要有谷歌服务框架的手机，最好是原生的安卓！毕竟国内的安卓手机都不带谷歌服务框架的，具体原因你懂得，而且预装各种流氓软件，不root还不给你卸载。这么一盘算下来，我就所订了最新的一款谷歌亲儿子，&lt;code&gt;Nexus 6P&lt;/code&gt;。由华为代工，虽然网上早已诟病高通骁龙810这颗soc的功耗，但是我等不及了。经过几个月的筹钱，终于在前几天拿到了一个台湾销售的Nexus 6P。激动的心情无以言表，打开手机，把玩一下，好不夸张的说，那么顺畅的安卓手机我还是第一次见。（&lt;code&gt;PS：之前一直在用iPhone，所以安卓手机接触得少&lt;/code&gt;）&lt;strong&gt; 但是！&lt;/strong&gt; &lt;strong&gt; 但是！！&lt;/strong&gt; &lt;strong&gt; 但是！！！&lt;/strong&gt; 不管是使用&lt;code&gt;移动数据&lt;/code&gt;还是连上&lt;code&gt;WiFi&lt;/code&gt;，都会在通知栏上显示一个感叹号！这是什么鬼，而且还显示无法连接到internet，我这不是好好的在上网么？！WTF&lt;br&gt;!作为强迫症患者的我，即使它能上网也不能抚慰我心里面的不安。于是我上网搜索了起来。  &lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;经过搜索，我才知道，原来早在安卓5.0的时候就引入了一种全新的网络评估机制来评估网络状况，当有网络连接请求的时候回选一个最好的网络进行连接。网上还有人直接po出了源码，大概看了一下。简单的来说，如果你的网络不是VPN的话，就会调用isCaptivePortal()这个方法来进行网络状况的判定，根据判定的结果决定是否要选用这个网络进行连接。好了，天朝为什么会出现这个问题？罪魁祸首就是这个方法！调用这个方法的时候回访问一个谷歌的服务器站点&lt;code&gt;clients3.google.com/generate_204&lt;/code&gt;并根据HTTP的状态返回值来判断网络连通状况。然后，当你看到里面包含&lt;code&gt;google&lt;/code&gt;字样的时候，或许你就应该懂了什么。所以那个感叹号一直存在，甚至有网友说连着WiFi突然开始跑流量，都是他的锅。😒  &lt;/p&gt;
+&lt;p&gt;当时一般人都会想到，那就屏蔽这个方法呗，其实我的想法也是这样的，但是经过网上大神的深入原发分析发现，这个方法的作用远不止这个，它还很重要，需要判断当前的网络是否需要登录，比如周末没事带着手机去星巴克这种WiFi需要登录的场所，当连接这些热点的时候，安卓会弹出对话框问你是否需要登录，这个功能就依靠这个方法。大神分析源码之后原理如下：  &lt;/p&gt;
+&lt;p&gt;安卓首先访问上面提到的网址，这个网址如字面所说，会返回一个&lt;code&gt;http204&lt;/code&gt;。204的意识表示的是空内容。如果当前的WiFi需要登录，那么在访问的时候就会跳转到登录的页面，这个时候的返回值也肯定就不是204了。通过这个方法，完全还区分了当前的WiFi是否需要登录，真的还是佩服想出这个方法的程序猿。  &lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;解决方案&quot;&gt;&lt;a href=&quot;#解决方案&quot; class=&quot;headerlink&quot; title=&quot;解决方案&quot;&gt;&lt;/a&gt;解决方案&lt;/h1&gt;&lt;p&gt;经过上面的分析，我们知道，简单的屏蔽那个方法不是一个明智的选择，但是不屏蔽那个网址的话，会有感叹号影响美观甚至存在偷跑流量的可能性。那为何不自己搭建一个服务器，然后默认访问自己的服务器，返回一个&lt;code&gt;http204&lt;/code&gt;不就解决了问题吗？当然，替换的办法大概有两种，一是可以使用一个软件来替换网址，但是这个软件需要root权限。二是使用adb工具来替换。因为我的手机毕竟买来还没有一个星期，所以我肯定是不愿意root的，而且我是一个从iPhone过渡过来的用户，肯定是不喜欢折腾这些有的没的。下面就从零开始，来实现&lt;strong&gt;去感叹号&lt;/strong&gt;。  &lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;准备工作&quot;&gt;&lt;a href=&quot;#准备工作&quot; class=&quot;headerlink&quot; title=&quot;准备工作&quot;&gt;&lt;/a&gt;准备工作&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;服务器：阿里云  &lt;/li&gt;
+&lt;li&gt;操作系统：CentOS 7&lt;/li&gt;
+&lt;li&gt;adb工具  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;搭建服务器&quot;&gt;&lt;a href=&quot;#搭建服务器&quot; class=&quot;headerlink&quot; title=&quot;搭建服务器&quot;&gt;&lt;/a&gt;搭建服务器&lt;/h1&gt;&lt;p&gt;经过这个部分，我们需要在服务器上搭建一个web服务器最熟悉的是Apache，并访问服务器之后会返回一个204。  &lt;/p&gt;
+&lt;h2 id=&quot;安装Apache&quot;&gt;&lt;a href=&quot;#安装Apache&quot; class=&quot;headerlink&quot; title=&quot;安装Apache&quot;&gt;&lt;/a&gt;安装Apache&lt;/h2&gt;&lt;p&gt;在服务器上，可以很简单的使用CentOS的包管理器安装。当然，我的建议是连接服务器的时候使用root身份。输入下面的命令：  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;yum install httpd  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然后后面跟着提示走，很快就安装完&lt;code&gt;Apache&lt;/code&gt;了。完成之后需要启动这个服务，在上一篇文章中介绍过CentOS 7启动服务和之前的不同，执行以下命令就可以启动了  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;systemctl start httpd.service  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;好了，现在可以输入你的服务器的IP地址在浏览器中，如果出现一个apache的页面，那就说明http服务器已经安装成功并且正在运行了。最后，不得不做的一个事情就是让Apache开机自启，不然万一有一天你的服务器崩溃了重启之后又会出现感叹号。 &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;systemctl enable httpd.service
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;如果安装成功又不能访问的话，考虑一下防火墙规则和SELinux，但是一般的云服务器是默认关闭这些的，修改一下安全组就可以了。&lt;/p&gt;
+&lt;h2 id=&quot;开启Apache的Rewrite模块&quot;&gt;&lt;a href=&quot;#开启Apache的Rewrite模块&quot; class=&quot;headerlink&quot; title=&quot;开启Apache的Rewrite模块&quot;&gt;&lt;/a&gt;开启Apache的Rewrite模块&lt;/h2&gt;&lt;p&gt;为什么需要使用这个模块呢，因为我的第一个想法是使用Apache+PHP来返回一个204，能够返回204，但是配置到手机上之后还是有感叹号，我就在想可能是我不知道的原因或者有什么其他需要注意的地方我没注意，所以在这里也抛砖引玉，如果有哪一个大神能够告诉我，欢迎&lt;strong&gt;联系我&lt;/strong&gt;，联系方式见&lt;strong&gt;主页&lt;/strong&gt;。后面尝试之后使用Apache的这个模块能成功，所以本文介绍这个方法。&lt;br&gt;Rewite模块在CentOS 7上是默认开启的，可以通过一下命令查看已经加载的模块：  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;apachectl -M | sort  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;执行后会列出来已经开启的模块，在里面如果没有找到Rewrite的话，那就是可能由于一些原因被屏蔽了。在&lt;code&gt;/etc/httpd/conf.modules.d/00-base.conf&lt;/code&gt;这个配置文件中加上一条语句即可。  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;LoadModule rewrite_module modules/mod_rewrite.so  
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;配置并启用-htaccess文件&quot;&gt;&lt;a href=&quot;#配置并启用-htaccess文件&quot; class=&quot;headerlink&quot; title=&quot;配置并启用.htaccess文件&quot;&gt;&lt;/a&gt;配置并启用.htaccess文件&lt;/h2&gt;&lt;p&gt;我们需要使用这个文件配置Apache的重定向规则，在默认情况下，这个文件应该保存在&lt;code&gt;/var/www/html&lt;/code&gt;这个目录。现在就需要编辑这个文件。  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cd /var/www/html
+vim .htaccess  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;当然，如果之前没有创建过这个文件的话打开的会是一个空文件，然后输入如下的规则：  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;RewriteEngine On
+RewriteCond %{REQUEST_URI} /generate_204$
+RewriteRule $ / [R=204]  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;如果不懂上面的规则是什么意思的话，那就直接复制就好，这里面涉及到正则表达式的内容。保存退出之后我们需要在Apache的配置文件中让刚才的配置生效。  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vim /etc/httpd/conf/httpd.conf  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然后找到&lt;code&gt;&amp;lt;directory /var/www/html&amp;gt;&lt;/code&gt;在里面有一句&lt;code&gt;AllowOverride None&lt;/code&gt;需要修改  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;Directory /var/www/html&amp;gt;
+...
+    AllowOverride All
+...
+ &amp;lt;/Directory&amp;gt;  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;保存退出之后，重启Apache  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;systemctl restart httpd  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;好了，现在的配置工作已经完成，让我们来检验一下，那怎么检验呢？当然可以使用&lt;code&gt;Wireshark&lt;/code&gt;来抓包分析，但是大可不必。我在网上找到一个网站，来测试返回值的。&lt;a href=&quot;https://httpstatus.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;查看HTTP返回值&lt;/a&gt;&lt;br&gt;在上面的网站中输入你的服务器IP就行了，如果备案之后也使用的域名的话，那就可以直接输入网址，稍等片刻下方出现的是204的话，就可以开心一把了。  &lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;替换网站&quot;&gt;&lt;a href=&quot;#替换网站&quot; class=&quot;headerlink&quot; title=&quot;替换网站&quot;&gt;&lt;/a&gt;替换网站&lt;/h1&gt;&lt;p&gt;这里需要使用到&lt;code&gt;adb&lt;/code&gt;，手机上要打开&lt;code&gt;USB调试功能&lt;/code&gt;。使用数据线连接电脑，然后打开切换到adb所在的目录或者把adb加入系统的环境变量。  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb shell &amp;quot;settings put global captive_portal_server XXX.XXX.XXX.XXX&amp;quot;  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;XXX替换为自己服务器的外网IP地址或者域名，记住，只写地址，不用写其他的东西，因为我们做了重定向。&lt;br&gt;完成之后拔了数据线，重新连接WiFi或者打开移动数据，会发现感叹号不在了，现在可以开一瓶酒庆祝了。当然，感叹号消失的时间和访问服务器所花费的时间成正比，所以选择国内的服务器肯定是最好的选择。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;最后扯淡&quot;&gt;&lt;a href=&quot;#最后扯淡&quot; class=&quot;headerlink&quot; title=&quot;最后扯淡&quot;&gt;&lt;/a&gt;最后扯淡&lt;/h1&gt;&lt;p&gt;如果自己的服务器关闭了，或者人肉翻墙了，觉得访问速度慢，可以使用  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb shell &amp;quot;settings delete global captive_portal_server&amp;quot;  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;来回复原来的设置。&lt;br&gt;当然，我现在想说的，Nexus 6P真的很顺滑，哈哈哈，让我爱不释手。自己也很庆幸拥有一些服务器方面的知识，能够在出现问题的时候想到办法去解决它，并且成功解决。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;先说一点废话&quot;&gt;&lt;a href=&quot;#先说一点废话&quot; class=&quot;headerlink&quot; title=&quot;先说一点废话&quot;&gt;&lt;/a&gt;先说一点废话&lt;/h1&gt;&lt;p&gt;平时自己喜欢玩儿服务器，所以自己就买了一个AWS来搭建自己的VPN服务器，稳如狗，从来不掉线，就自己一个人使
+    
+    </summary>
+    
+      <category term="服务器" scheme="http://yoursite.com/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>CentOS7上自定义系统服务</title>
+    <link href="http://yoursite.com/2016/04/17/CentOS7%E4%B8%8A%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/"/>
+    <id>http://yoursite.com/2016/04/17/CentOS7上自定义系统服务/</id>
+    <published>2016-04-17T06:20:23.000Z</published>
+    <updated>2016-04-17T07:34:55.000Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;最近做一个项目需要在服务器上写一个socket程序的服务端来监听客户端发来的连接，如果有请求作出相应。写了一个demo之后发现一个问题，使用&lt;code&gt;ssh&lt;/code&gt;登陆服务器（原来运行&lt;code&gt;CentOS 6&lt;/code&gt;）运行我写的java文件之后，因为会阻塞，所以会卡在那里，不能执行其他命令。当然，需要做其他操作的时候，可以使用组合键&lt;code&gt;Ctrl&lt;/code&gt;+&lt;code&gt;Z&lt;/code&gt;来放到后台来执行其他命令，需要使用的时候可以使用&lt;code&gt;fg&lt;/code&gt;命令来切换回后台程序。但是，我是远程登陆的，肯定是要退出登陆的，及时程序在后台执行，退出的时候回提示有后台程序，一旦退出的话，程序也会跟着结束。所有有一个想法，给自己编写的程序写成一个系统的进程，最好能开机自动启动，这样就可以实现随时连接。  &lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;环境&quot;&gt;&lt;a href=&quot;#环境&quot; class=&quot;headerlink&quot; title=&quot;环境&quot;&gt;&lt;/a&gt;环境&lt;/h1&gt;&lt;p&gt;&lt;code&gt;CentOS 7&lt;/code&gt;这一发行版继承了&lt;code&gt;RHEL 7&lt;/code&gt;的新的特性，例如强大的&lt;code&gt;systemctl&lt;/code&gt;，而&lt;code&gt;systemctl&lt;/code&gt;的使用也使得以往系统服务的&lt;code&gt;/etc/init.d&lt;/code&gt;的启动脚本的方式因此改变，也大幅提高了系统服务的运行效率。但服务的配置和以往也发生了极大的不同，说实在的，变的简单而易用了许多。这也就是为什么这次选择&lt;code&gt;CentOS 7&lt;/code&gt;而不是原来的6。所以第一步要做的就是确认系统的版本，我是重装了一个系统，然后配置好&lt;code&gt;FTP服务&lt;/code&gt;和&lt;code&gt;JDK&lt;/code&gt;。这两个服务的配置后面会有文章介绍的，他们不是今天的重点。  &lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;进入正题&quot;&gt;&lt;a href=&quot;#进入正题&quot; class=&quot;headerlink&quot; title=&quot;进入正题&quot;&gt;&lt;/a&gt;进入正题&lt;/h1&gt;&lt;p&gt;&lt;code&gt;CentOS 7&lt;/code&gt;的服务&lt;code&gt;systemctl&lt;/code&gt;脚本存放在&lt;code&gt;/usr/lib/systemd/&lt;/code&gt;，有系统（&lt;code&gt;system&lt;/code&gt;）和用户（&lt;code&gt;user&lt;/code&gt;）之分，像需要开机不登陆就能运行的程序，还是存在系统服务里面比较好，也就是&lt;code&gt;/usr/lib/systemd/system&lt;/code&gt;这个目录下。&lt;br&gt;每一个服务以&lt;code&gt;.service&lt;/code&gt;结尾，一般会分为3部分：&lt;code&gt;[Unit]&lt;/code&gt;、&lt;code&gt;[Service]&lt;/code&gt;和&lt;code&gt;[Install]&lt;/code&gt;，所谓我们也就要仿照这个格式来编写。下面是打开的系统里面一个名为&lt;code&gt;ntpdate.service&lt;/code&gt;的服务：  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[Unit]
+Description=Set time via NTP
+After=syslog.target network.target nss-lookup.target
+Before=time-sync.target
+Wants=time-sync.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/ntpdate-wrapper
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target  
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h2 id=&quot;Unit&quot;&gt;&lt;a href=&quot;#Unit&quot; class=&quot;headerlink&quot; title=&quot;[Unit]&quot;&gt;&lt;/a&gt;[Unit]&lt;/h2&gt;&lt;p&gt;这个部分主要是对这个服务的说明，内容包括&lt;code&gt;Description&lt;/code&gt;等选项，&lt;code&gt;Description&lt;/code&gt;用于描述服务，&lt;code&gt;After&lt;/code&gt;用于描述服务类别.典型的情况是，单元&lt;code&gt;A&lt;/code&gt;要求单元&lt;code&gt;B&lt;/code&gt;在&lt;code&gt;A&lt;/code&gt;启动之前运行。在此情况下，向单元&lt;code&gt;A&lt;/code&gt;配置文件中的&lt;code&gt;[Unit]&lt;/code&gt;段添加&lt;code&gt;Requires=B&lt;/code&gt;和&lt;code&gt;After=B&lt;/code&gt;即可。若此依赖关系是可选的，可添加&lt;code&gt;Wants=B&lt;/code&gt; 和&lt;code&gt;After=B&lt;/code&gt;。请注意&lt;code&gt;Wants=&lt;/code&gt;和&lt;code&gt;Requires=&lt;/code&gt;并不意味着&lt;code&gt;After=&lt;/code&gt;，即如果&lt;code&gt;After=&lt;/code&gt;选项没有制定，这两个单元将被并行启动。  &lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&quot;Service&quot;&gt;&lt;a href=&quot;#Service&quot; class=&quot;headerlink&quot; title=&quot;[Service]&quot;&gt;&lt;/a&gt;[Service]&lt;/h2&gt;&lt;p&gt;&lt;code&gt;[Service]&lt;/code&gt;部分是服务的关键，是服务的一些具体运行参数的设置，这里&lt;code&gt;Type=&lt;/code&gt;是运行的形式。包括以下一些选项：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Type=simple（默认值）&lt;/code&gt;：&lt;code&gt;systemd&lt;/code&gt;认为该服务将立即启动。服务进程不会&lt;code&gt;fork&lt;/code&gt;。如果该服务要启动其他服务，不要使用此类型启动，除非该服务是&lt;code&gt;socket&lt;/code&gt;激活型。 &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Type=forking&lt;/code&gt;：&lt;code&gt;systemd&lt;/code&gt;认为当该服务进程&lt;code&gt;fork&lt;/code&gt;，且父进程退出后服务启动成功。对于常规的守护进程&lt;code&gt;（daemon）&lt;/code&gt;，除非你确定此启动方式无法满足需求，使用此类型启动即可。使用此启动类型应同时指定&lt;code&gt;PIDFile=&lt;/code&gt;，以便&lt;code&gt;systemd&lt;/code&gt;能够跟踪服务的主进程。 &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Type=oneshot&lt;/code&gt;：这一选项适用于只执行一项任务、随后立即退出的服务。可能需要同时设置 &lt;code&gt;RemainAfterExit=yes&lt;/code&gt;使得&lt;code&gt;systemd&lt;/code&gt;在服务进程退出之后仍然认为服务处于激活状态。  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以上列出一些了解的，其他的可以查看官方文档来了解。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ExecStart&lt;/code&gt;为服务的具体运行命令，&lt;code&gt;ExecReload&lt;/code&gt;为重启命令，&lt;code&gt;ExecStop&lt;/code&gt;为停止命令，&lt;code&gt;PrivateTmp=True&lt;/code&gt;表示给服务分配独立的临时空间。&lt;br&gt;&lt;strong&gt;注意&lt;/strong&gt;：&lt;code&gt;[Service]&lt;/code&gt;部分的启动、重启、停止命令全部要求使用&lt;strong&gt;绝对路径&lt;/strong&gt;，使用相对路径则会报错！  &lt;/p&gt;
+&lt;h2 id=&quot;Install&quot;&gt;&lt;a href=&quot;#Install&quot; class=&quot;headerlink&quot; title=&quot;[Install]&quot;&gt;&lt;/a&gt;[Install]&lt;/h2&gt;&lt;p&gt;这个部分是服务安装的设置，可设置为多用户。如下：  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;WantedBy=multi-user.target  
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&quot;我的程序&quot;&gt;&lt;a href=&quot;#我的程序&quot; class=&quot;headerlink&quot; title=&quot;我的程序&quot;&gt;&lt;/a&gt;我的程序&lt;/h1&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;[Unit]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;Description=Test java socket server&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;After=network.target&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[Service]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;ExecStart=/usr/java/jdk1.8.0_71/bin/java -jar /home/ftpmao/Server.jar&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;PrivateTmp=true&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[Install]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;WantedBy=multi-user.target&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;经过以上的介绍，我想这个应该能看懂我编写的javasocket.service。服务脚本按照上面编写完成后，以&lt;code&gt;754&lt;/code&gt;的权限保存在&lt;code&gt;/usr/lib/systemd/system&lt;/code&gt;目录下，这时就可以利用&lt;code&gt;systemctl&lt;/code&gt;进行配置了。可以使用  &lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;systemctl start javasocket.service&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;测试服务是否可以成功运行,当然，除非运气好，不然不可能一次成功，这就涉及到了调试。  &lt;/p&gt;
+&lt;h1 id=&quot;调试&quot;&gt;&lt;a href=&quot;#调试&quot; class=&quot;headerlink&quot; title=&quot;调试&quot;&gt;&lt;/a&gt;调试&lt;/h1&gt;&lt;p&gt;当程序启动不正确的时候，可以使用  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;systemctl status xxxx       
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这个命令来查看程序状态和出错的原因，找出原因就可以对症下药。&lt;br&gt;&lt;strong&gt;注意&lt;/strong&gt;：在&lt;code&gt;ExecStart&lt;/code&gt;类似的几个后面只能写命令。重定向符号例如&lt;code&gt;&amp;gt;&amp;gt;&lt;/code&gt;和逻辑运算符&lt;code&gt;&amp;amp;&lt;/code&gt;等会造成错误！  &lt;/p&gt;
+&lt;h1 id=&quot;最后&quot;&gt;&lt;a href=&quot;#最后&quot; class=&quot;headerlink&quot; title=&quot;最后&quot;&gt;&lt;/a&gt;最后&lt;/h1&gt;&lt;p&gt;最后，也是我们的初衷，开机自启！使用  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;systemctl enable xxxxx  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;就可以将所编写的服务添加至开机启动。至此大功告成。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;最近做一个项目需要在服务器上写一个socket程序的服务端来监听客户端发来的连接，如果有请求作出相应。写了一个demo之后发现一个问题，使用
+    
+    </summary>
+    
+      <category term="服务器" scheme="http://yoursite.com/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>mac下tomcat安装与配置</title>
+    <link href="http://yoursite.com/2015/10/19/mac%E4%B8%8Btomcat%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/"/>
+    <id>http://yoursite.com/2015/10/19/mac下tomcat安装与配置/</id>
+    <published>2015-10-19T09:14:26.000Z</published>
+    <updated>2016-03-06T16:34:08.000Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;首先说说为什么要在mac上安装&lt;code&gt;tomcat&lt;/code&gt;。最近，在上一门软件测试技术的课，课上需要安装一个&lt;code&gt;jfroum&lt;/code&gt;论坛进项测试，在本机上就需要安装一个服务器，所以使用的是tomcat。实验课上很快就安装完成，之后发现&lt;code&gt;Windows&lt;/code&gt;平台的安装很简单，手里有一台mac，就想在自己的电脑上装一个，以后上实验课就带自己的电脑，毕竟实验室的电脑超级卡，浪费时间坐在实验室，还不如快点做完回去学习。遂开始安装，但是在安装的过程中并不是那么简单的,下面就介绍一下安装的过程。  &lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;1-处理资源包&quot;&gt;&lt;a href=&quot;#1-处理资源包&quot; class=&quot;headerlink&quot; title=&quot;1.处理资源包&quot;&gt;&lt;/a&gt;1.处理资源包&lt;/h1&gt;&lt;p&gt;首先需要已经安装&lt;code&gt;JDK&lt;/code&gt;！！！这个到&lt;a href=&quot;http://tomcat.apache.org&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;apache官方主页&lt;/a&gt;下载mac版本的文件包，可以选tar.gz格式的。下载完成之后解压，重命名为&lt;code&gt;Tomcat&lt;/code&gt;并移动到&lt;code&gt;/Library&lt;/code&gt;下面。如果在&lt;code&gt;Finder&lt;/code&gt;中没有找到的话，可以按住&lt;code&gt;shift&lt;/code&gt;+&lt;code&gt;command&lt;/code&gt;+&lt;code&gt;G&lt;/code&gt;这个组合键，在框里面输入&lt;code&gt;/&lt;/code&gt;然后进入根目录，在里面找到&lt;code&gt;资源库&lt;/code&gt;。注意的是，进行拷贝操作需要root权限，所以在此需要输入密码。  &lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;2-修改文件权限&quot;&gt;&lt;a href=&quot;#2-修改文件权限&quot; class=&quot;headerlink&quot; title=&quot;2.修改文件权限&quot;&gt;&lt;/a&gt;2.修改文件权限&lt;/h1&gt;&lt;p&gt;打开电脑上自带的&lt;code&gt;终端&lt;/code&gt;程序，在里面输入  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo chmod 755 /Library/Tomcat/bin/*.sh  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;将bin目录了下的shell脚本的权限修改，否则会因为权限不够而执行失败。此处也会提示输入密码。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;3-启动Tomcat&quot;&gt;&lt;a href=&quot;#3-启动Tomcat&quot; class=&quot;headerlink&quot; title=&quot;3.启动Tomcat&quot;&gt;&lt;/a&gt;3.启动Tomcat&lt;/h1&gt;&lt;p&gt;在上一步执行成功之后，再在终端中输入以下命令  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cd /Library/Tomcat/bin  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;来切换到刚才复制文件的位置，在输入  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo sh startup.sh  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;若出现以下提示则表示安装并运行成功  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Using CATALINA_BASE:   /Library/Tomcat
+Using CATALINA_HOME:   /Library/Tomcat
+Using CATALINA_TMPDIR: /Library/Tomcat/temp
+Using JRE_HOME:        /Library/Java/JavaVirtualMachines/jdk1.8.0_20.jdk/Contents/Home
+Using CLASSPATH:       /Library/Tomcat/bin/bootstrap.jar:/Library/Tomcat/bin/tomcat-juli.jar
+Tomcat started.  
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h1 id=&quot;4-验证服务器是否运行&quot;&gt;&lt;a href=&quot;#4-验证服务器是否运行&quot; class=&quot;headerlink&quot; title=&quot;4.验证服务器是否运行&quot;&gt;&lt;/a&gt;4.验证服务器是否运行&lt;/h1&gt;&lt;p&gt;打开浏览器，输入&lt;code&gt;localhost:8080&lt;/code&gt;回车，如果看到&lt;code&gt;Apache Tomcat&lt;/code&gt;则表示运行成功！ &lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;5-附加&quot;&gt;&lt;a href=&quot;#5-附加&quot; class=&quot;headerlink&quot; title=&quot;5.附加&quot;&gt;&lt;/a&gt;5.附加&lt;/h1&gt;&lt;p&gt;以上运行的一个叫&lt;code&gt;startup.sh&lt;/code&gt;的shell脚本是每次开启服务器都需要运行的程序，如果在目录中每次斗殴输入绝对路径在运行的话稍显麻烦，得意与OS X系统的基于UNIX这一特性，加之又学习了Linux这个系统，就想起来把启动，停止和重启服务写成一个脚本。并且在&lt;code&gt;PATH&lt;/code&gt;这个环境变量的路径中加入，以后就可以直接输入一个简单的命令来启动或停止服务器了。所编写的脚本如下：  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+
+case $1 in
+    &amp;quot;start&amp;quot;)
+        sudo sh /Library/Tomcat/bin/startup.sh
+        echo -e &amp;quot;\nHey!!! Dear mao.Tomcat Started!!!!&amp;quot;
+    ;;
+    &amp;quot;stop&amp;quot;)
+        sh /Library/Tomcat/bin/shutdown.sh
+        echo -e &amp;quot;\nHey!!! Dear mao.Tomcat Stopped!!!!&amp;quot;
+    ;;
+    &amp;quot;restart&amp;quot;)
+        sh /Library/Tomcat/bin/shutdown.sh
+        sudo sh /Library/Tomcat/bin/startup.sh
+        echo -e &amp;quot;\nHey!!! Dear mao.Tomcat Restarted!!!!&amp;quot;
+    ;;
+    *)
+        echo -e &amp;quot;\nUsage: start|stop|restart&amp;quot;
+    ;;
+esac
+
+exit 0
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;将上面的代码复制到文本编辑器，然后保存，这里建议使用&lt;code&gt;Sublime&lt;/code&gt;，然后保存名字为&lt;code&gt;tomcat&lt;/code&gt;不要大写，也不要后缀。然后再给文件赋予执行权限（首先切换到文件所在的目录）：  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;chmod 777 tomcat  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然后给这个文件移动到以下目录  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;echo $PATH  
+/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/git/bin  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;目录是以：问分割的，推荐移动到&lt;code&gt;/usr/local/bin&lt;/code&gt;目录了下，其他目录会需要root权限或者其他原因失败，如果不会在终端中移动文件，那就还是按住上述的组合键，输入目录之后，把文件拖拽进去。至此，就完成了脚本。下面可以试试命令：  &lt;/p&gt;
+&lt;p&gt;1.tomcat start     启动服务&lt;br&gt;2.tomcat stop      停止服务&lt;br&gt;3.tomcat restart   重启服务&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;首先说说为什么要在mac上安装&lt;code&gt;tomcat&lt;/code&gt;。最近，在上一门软件测试技术的课，课上需要安装一个&lt;code&gt;jfrou
+    
+    </summary>
+    
+      <category term="服务器" scheme="http://yoursite.com/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>SMTP协议-cmd下命令发送邮件</title>
+    <link href="http://yoursite.com/2015/10/04/SMTP%E5%8D%8F%E8%AE%AE-cmd%E4%B8%8B%E5%91%BD%E4%BB%A4%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/"/>
+    <id>http://yoursite.com/2015/10/04/SMTP协议-cmd下命令发送邮件/</id>
+    <published>2015-10-04T14:42:40.000Z</published>
+    <updated>2016-06-05T16:45:38.000Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;什么是SMTP&quot;&gt;&lt;a href=&quot;#什么是SMTP&quot; class=&quot;headerlink&quot; title=&quot;什么是SMTP&quot;&gt;&lt;/a&gt;什么是SMTP&lt;/h1&gt;&lt;p&gt;&lt;code&gt;SMTP（Simple Mail Transfer Protocol）&lt;/code&gt;即简单邮件传输协议,它是一组用于由源地址到目的地址传送邮件的规则，由它来控制信件的中转方式。SMTP协议属于TCP/IP协议簇，它帮助每台计算机在发送或中转信件时找到下一个目的地。通过SMTP协议所指定的服务器,就可以把E-mail寄到收信人的服务器上了，整个过程只要几分钟。SMTP服务器则是遵循SMTP协议的发送邮件服务器，用来发送或中转发出的电子邮件。&lt;br&gt;&lt;img src=&quot;http://images.cnitblog.com/blog/41574/201302/21145823-faabf336788e4db8b4ec605eb89a10d5.jpg&quot; alt=&quot;&quot;&gt;  &lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;命令行使用SMTP&quot;&gt;&lt;a href=&quot;#命令行使用SMTP&quot; class=&quot;headerlink&quot; title=&quot;命令行使用SMTP&quot;&gt;&lt;/a&gt;命令行使用SMTP&lt;/h1&gt;&lt;p&gt;PS：下面的操作是在&lt;code&gt;Windows&lt;/code&gt;系统上的，OS X上没有测试，所以请使用Windows来进行下面的操作，以保证结果的正确性。  &lt;/p&gt;
+&lt;h3 id=&quot;开始正题&quot;&gt;&lt;a href=&quot;#开始正题&quot; class=&quot;headerlink&quot; title=&quot;开始正题&quot;&gt;&lt;/a&gt;开始正题&lt;/h3&gt;&lt;p&gt;首先按下&lt;code&gt;win&lt;/code&gt;+&lt;code&gt;R&lt;/code&gt;这个组合键，然后在框里面输入&lt;code&gt;cmd&lt;/code&gt;&lt;br&gt;&lt;img src=&quot;https://raw.githubusercontent.com/maodahua/maodahua.github.io/master/image/1.jpg&quot; alt=&quot;&quot;&gt;&lt;br&gt;按一下&lt;code&gt;回车&lt;/code&gt;出现如下窗口，进入命令行模式&lt;br&gt;&lt;img src=&quot;https://raw.githubusercontent.com/maodahua/maodahua.github.io/master/image/2.jpg&quot; alt=&quot;&quot;&gt;  &lt;/p&gt;
+&lt;hr&gt;
+&lt;h4 id=&quot;远程登录&quot;&gt;&lt;a href=&quot;#远程登录&quot; class=&quot;headerlink&quot; title=&quot;远程登录&quot;&gt;&lt;/a&gt;远程登录&lt;/h4&gt;&lt;p&gt;在命令窗口输入&lt;code&gt;telnet smtp.qq.com 25&lt;/code&gt;(这里以QQ邮箱为例，其他的邮箱请再网上搜索SMTP地址。25表示建立连接的端口号，SMTP默认为25)然后回车，你将会看到如下欢迎页,各个邮箱有所不同。到了这一步之后的操作字母是不能输错的，因为你的每一次按键实际上已经被传送到服务器，所以输入错误时不能使用退格键删除，只能换行&lt;strong&gt;重新输入&lt;/strong&gt;&lt;br&gt;&lt;img src=&quot;https://raw.githubusercontent.com/maodahua/maodahua.github.io/master/image/4.jpg&quot; alt=&quot;&quot;&gt;  &lt;/p&gt;
+&lt;hr&gt;
+&lt;h4 id=&quot;用户登录&quot;&gt;&lt;a href=&quot;#用户登录&quot; class=&quot;headerlink&quot; title=&quot;用户登录&quot;&gt;&lt;/a&gt;用户登录&lt;/h4&gt;&lt;p&gt;输入&lt;code&gt;helo qq.com&lt;/code&gt;回车，这是向服务器表明你的身份，如果返回&lt;code&gt;250&lt;/code&gt;则表示服务器认可了你的身份。再输入 &lt;code&gt;auth login&lt;/code&gt;回车，也就是告诉服务器需要输入用户名进行登录&lt;br&gt;&lt;img src=&quot;https://raw.githubusercontent.com/maodahua/maodahua.github.io/master/image/5.jpg&quot; alt=&quot;&quot;&gt;&lt;br&gt;此时服务器会返回一个&lt;code&gt;334&lt;/code&gt;。表示可以输入用户名了，但是注意，这里的用户名需要编码之后才能被识别。也就是说我的邮箱用户名是&lt;code&gt;289203021@qq.com&lt;/code&gt;，我需要将这个字符串经过base64编码之后才能使用，关于这个编码，可以点击&lt;a href=&quot;http://base64.xpcha.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;这里&lt;/a&gt;进行编码。然后复制编码的结果。粘贴到命令窗口当中，然后回车，服务器还会返回一个&lt;code&gt;334&lt;/code&gt;信息，接着输入邮箱的密码，同样的密码也需要编码，粘贴进去之后回车。&lt;br&gt;PS:命令行不可以使用快捷键粘贴，需要右键点击窗口的标题栏，在编辑这个选项中找到粘贴。&lt;br&gt;&lt;img src=&quot;https://raw.githubusercontent.com/maodahua/maodahua.github.io/master/image/7.jpg&quot; alt=&quot;&quot;&gt;&lt;br&gt;如图，返回了一个&lt;code&gt;235&lt;/code&gt;表示登陆成功。  &lt;/p&gt;
+&lt;hr&gt;
+&lt;h4 id=&quot;写信&quot;&gt;&lt;a href=&quot;#写信&quot; class=&quot;headerlink&quot; title=&quot;写信&quot;&gt;&lt;/a&gt;写信&lt;/h4&gt;&lt;p&gt;输入&lt;code&gt;mail from:&amp;lt;&amp;gt;&lt;/code&gt; &amp;lt;&amp;gt;中填写发件人邮箱，也就是自己登陆的邮箱&lt;br&gt;输入&lt;code&gt;rcpt to:&amp;lt;&amp;gt;&lt;/code&gt; &amp;lt;&amp;gt;中填写收件人邮箱&lt;br&gt;输入&lt;code&gt;data&lt;/code&gt;回车，回车之后就开始输入右键的内容&lt;br&gt;下面是data的可选项（虽然是可选项，但是由于邮箱的不同，会出现退信的可能，QQ邮箱的话建议全写上，注意不要写错，不然很麻烦）：&lt;br&gt;输入&lt;code&gt;from:&lt;/code&gt;发件人名称，将显示在发件箱的&lt;code&gt;收件人&lt;/code&gt;一栏&lt;br&gt;输入&lt;code&gt;to:&lt;/code&gt;收件人名称，将显示在收件箱的&lt;code&gt;收件人&lt;/code&gt;一栏&lt;br&gt;输入&lt;code&gt;subject:&lt;/code&gt;新建主题，显示在收件箱&lt;code&gt;主题&lt;/code&gt;一栏&lt;br&gt;以上每输入一项按一下回车，在&lt;code&gt;subject&lt;/code&gt;下面需要空一行，也就是输入完subject之后按两下回车。&lt;br&gt;空行开始就是信件的正文内容。&lt;br&gt;在里面输入你想要发送的东西，然后回车，在新的一行使用.（英文输入法的句号）结束并发送。&lt;br&gt;&lt;img src=&quot;https://raw.githubusercontent.com/maodahua/maodahua.github.io/master/image/8.jpg&quot; alt=&quot;&quot;&gt;&lt;br&gt;发送成功后服务器会返回&lt;code&gt;250 OK&lt;/code&gt;，与此同时，我已经收到了邮件&lt;br&gt;&lt;img src=&quot;https://raw.githubusercontent.com/maodahua/maodahua.github.io/master/image/9.jpg&quot; alt=&quot;&quot;&gt;  &lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;最后说明&quot;&gt;&lt;a href=&quot;#最后说明&quot; class=&quot;headerlink&quot; title=&quot;最后说明&quot;&gt;&lt;/a&gt;最后说明&lt;/h1&gt;&lt;p&gt;有的想输入在信件中输入汉字的，有的可以支持直接输入，有的不能直接输入，不能输入的可以通过粘贴进去。以上的关于学习&lt;em&gt;计算机网络&lt;/em&gt;这门课中的SMTP协议之后的手动操作，如有疑问，欢迎联系&lt;code&gt;mdh@maodahua.com&lt;/code&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;什么是SMTP&quot;&gt;&lt;a href=&quot;#什么是SMTP&quot; class=&quot;headerlink&quot; title=&quot;什么是SMTP&quot;&gt;&lt;/a&gt;什么是SMTP&lt;/h1&gt;&lt;p&gt;&lt;code&gt;SMTP（Simple Mail Transfer Protocol）&lt;/code&gt;即简
+    
+    </summary>
+    
+      <category term="计算机网络" scheme="http://yoursite.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Windows配置hexo教程</title>
+    <link href="http://yoursite.com/2015/10/03/Windows%E9%85%8D%E7%BD%AEhexo%E6%95%99%E7%A8%8B/"/>
+    <id>http://yoursite.com/2015/10/03/Windows配置hexo教程/</id>
+    <published>2015-10-03T07:50:44.000Z</published>
+    <updated>2015-10-03T07:41:20.000Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;Hexo安装方法&quot;&gt;&lt;a href=&quot;#Hexo安装方法&quot; class=&quot;headerlink&quot; title=&quot;Hexo安装方法&quot;&gt;&lt;/a&gt;Hexo安装方法&lt;/h1&gt;&lt;hr&gt;
+&lt;h2 id=&quot;一、下载Git&quot;&gt;&lt;a href=&quot;#一、下载Git&quot; class=&quot;headerlink&quot; title=&quot;一、下载Git&quot;&gt;&lt;/a&gt;一、下载Git&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;http://git-for-windows.github.io&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;msysGit下载地址&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;进入上面的页面,点击&lt;code&gt;Download&lt;/code&gt;会进入下载页面，找到&lt;code&gt;Downloads&lt;/code&gt;部分，根据自己系统的情况选择下载32位或者64位的安装包，下载完成后进行安装。&lt;/p&gt;
+&lt;h2 id=&quot;二、下在Node-js&quot;&gt;&lt;a href=&quot;#二、下在Node-js&quot; class=&quot;headerlink&quot; title=&quot;二、下在Node.js&quot;&gt;&lt;/a&gt;二、下在Node.js&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;http://nodejs.org&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Node.js下载地址&lt;/a&gt;&lt;br&gt;同样进入上面的界面，点击&lt;code&gt;INSTALL&lt;/code&gt;下载安装包，下载完成后并安装。&lt;/p&gt;
+&lt;h2 id=&quot;三、安装Hexo&quot;&gt;&lt;a href=&quot;#三、安装Hexo&quot; class=&quot;headerlink&quot; title=&quot;三、安装Hexo&quot;&gt;&lt;/a&gt;三、安装Hexo&lt;/h2&gt;&lt;p&gt;完成上面两步后，此时当我们在桌面点击鼠标右键时，会有一系列新的选项，这里我们需要用到的&lt;code&gt;Git Bash&lt;/code&gt;，接下来我们会用命令行来完成剩余的工作。&lt;/p&gt;
+&lt;h3 id=&quot;1-安装Hexo&quot;&gt;&lt;a href=&quot;#1-安装Hexo&quot; class=&quot;headerlink&quot; title=&quot;1.安装Hexo&quot;&gt;&lt;/a&gt;1.安装Hexo&lt;/h3&gt;&lt;p&gt;根据上面的方法，打开&lt;code&gt;Git Bash&lt;/code&gt;控制台，之后系统会打开一个窗口，窗口内是黑色的背景和一堆英文，看不懂没有关系跟着步骤一步一步做就行。&lt;/p&gt;
+&lt;p&gt;在控制台中输入以下命令：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;npm install -g hexo
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;之后系统会自动去&lt;code&gt;Git&lt;/code&gt;上下载并安装&lt;code&gt;Hexo&lt;/code&gt;，接下来会一直循环显示/-\这三个符号，这表示系统在下载需要的文件。&lt;/p&gt;
+&lt;p&gt;但是根据笔者遇到的情况，使用&lt;code&gt;npm&lt;/code&gt;安装可能会出现卡住的现象导致无法正常安装，解决的办法就是修改&lt;code&gt;npm&lt;/code&gt;的安装源，大家可以选择以下方法中的一个即可（正常下载的朋友就略过这里）&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;通过config命令：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;npm config set registry http://registry.cnpmjs.org 
+
+   npm info underscore
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;通过命令行指定&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;npm -registry http://registry.cnpmjs.org     info underscore
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;然后再来执行一次最开始的命令：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;npm install -g hexo
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;耐心等待一会儿，&lt;code&gt;Hexo&lt;/code&gt;就下载好了。&lt;/p&gt;
+&lt;h3 id=&quot;2-生成Hexo静态博客&quot;&gt;&lt;a href=&quot;#2-生成Hexo静态博客&quot; class=&quot;headerlink&quot; title=&quot;2.生成Hexo静态博客&quot;&gt;&lt;/a&gt;2.生成Hexo静态博客&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;选一个适合的地方存放博客文件&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;cd&lt;/code&gt;命令可以在命令行中快速指定到一个地址，比如：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cd D:\
+
+D:
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这样可以快速的指定要一个地址上去，然后是创建一个文件夹进行归类管理&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;mkdir blog
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这样在D盘我们就创建了一个名字为&lt;code&gt;blog&lt;/code&gt;的文件夹。接下来我们在进入&lt;code&gt;blog&lt;/code&gt;文件夹中，同样使用&lt;code&gt;cd&lt;/code&gt;命令。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cd blog
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;此时我们进入了我们选好的地址中，执行以下命令：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;hexo init
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然后你会看到以下的反馈：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[info] Copying data
+
+[info] You are almost done! Don&amp;apos;t forget to run &amp;apos;npm install&amp;apos;...
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;所以接下来就要执行&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;npm install
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;等待他完成后我们可以进去到文件夹中看到以下目录：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;node_modules&lt;/code&gt;： Hexo的功能JavaScript文件    &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;public&lt;/code&gt;：生成静态网页文件&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;scaffolds&lt;/code&gt;：工具模板&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;source&lt;/code&gt;：&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;/_drafts&lt;/code&gt;-草稿文件夹&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/_posts&lt;/code&gt;-文章文件夹&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;themes&lt;/code&gt;：用来存放皮肤的文件夹&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;_config.yml&lt;/code&gt;：全局配置文件&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;db.json&lt;/code&gt;：json格式的静态常量数据库&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ol&gt;
+&lt;li&gt;查看生成的静态网页&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;进入到blog的地址后，执行如下的命令：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;hexo generate&lt;/code&gt; 用来生成静态网页相关的文件，这些文件会存储在&lt;code&gt;public&lt;/code&gt;中，也可使用简单的命令&lt;code&gt;hexo g&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;然后再输入&lt;code&gt;hexo server&lt;/code&gt;或者&lt;code&gt;hexo s&lt;/code&gt;这样可以在本地查看自己生成的网页，现在打开浏览器（推荐使用的浏览器是&lt;code&gt;Chrome&lt;/code&gt;和&lt;code&gt;FireFox&lt;/code&gt;）,在地址栏输入&lt;code&gt;localhost:4000&lt;/code&gt;或者点击&lt;a href=&quot;http://localhost:4000&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;这里&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&quot;最后&quot;&gt;&lt;a href=&quot;#最后&quot; class=&quot;headerlink&quot; title=&quot;最后&quot;&gt;&lt;/a&gt;最后&lt;/h1&gt;&lt;hr&gt;
+&lt;p&gt;最初始的工作就做完了，下一步的任务就是如何吧网页托管到&lt;code&gt;GitHub&lt;/code&gt;上，这样别人也能开你的博客了。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;Hexo安装方法&quot;&gt;&lt;a href=&quot;#Hexo安装方法&quot; class=&quot;headerlink&quot; title=&quot;Hexo安装方法&quot;&gt;&lt;/a&gt;Hexo安装方法&lt;/h1&gt;&lt;hr&gt;
+&lt;h2 id=&quot;一、下载Git&quot;&gt;&lt;a href=&quot;#一、下载Git&quot; class=&quot;h
+    
+    </summary>
+    
+      <category term="blog" scheme="http://yoursite.com/categories/blog/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>为什么不买iPhone6S</title>
+    <link href="http://yoursite.com/2015/09/14/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E4%B9%B0iPhone6S/"/>
+    <id>http://yoursite.com/2015/09/14/为什么不买iPhone6S/</id>
+    <published>2015-09-14T14:55:25.000Z</published>
+    <updated>2015-09-14T17:07:23.000Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;声明&quot;&gt;&lt;a href=&quot;#声明&quot; class=&quot;headerlink&quot; title=&quot;声明&quot;&gt;&lt;/a&gt;声明&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;以下都属于个人感受，利益无关，如有不足欢迎指正，如有意见欢迎讨论，版权所有禁止一切形式的转载&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&quot;首先说说感受&quot;&gt;&lt;a href=&quot;#首先说说感受&quot; class=&quot;headerlink&quot; title=&quot;首先说说感受&quot;&gt;&lt;/a&gt;首先说说感受&lt;/h1&gt;&lt;p&gt;笔者作为一个痴迷电子产品的小伙，在之前已经用过很多Apple Inc.的很多产品。本月十号凌晨一点，苹果在美国举办秋季发布会，发布了一大波东西，让人眼花缭乱，我还是眼睛都不眨的看到了接近四点。首先声明我是果粉，看完发布会之后感觉根本睡不着，脑海里面还在回想发布的东西会给生活带来什么便利，以后的办公会多么的便捷，这些问题萦绕在我的脑海，让我很期待。特别是最后压轴出场的iPhone6S和iPhone6S Plus。更是带了了很多新的技术，虽然之前已经被曝光的差不多了，到了发布的时候，依然那么的新鲜。但是为什么本文的标题是不买6S（代指iPhone6S和iPhone6S Plus，为方便后文都这样称呼），我将从手机的各个方面详细讲解。&lt;/p&gt;
+&lt;h1 id=&quot;相机&quot;&gt;&lt;a href=&quot;#相机&quot; class=&quot;headerlink&quot; title=&quot;相机&quot;&gt;&lt;/a&gt;相机&lt;/h1&gt;&lt;p&gt;早有传言此次发布的新手机将升级摄像头，毕竟在三星等厂商的压力之下，升级摄像头的像素是当务之急。回想过去几代的iPhone，升级到800W时，一年比一年的优化做得好，一代比一代的成像质量和水品都在稳步提升，比起其他厂商高像素的手机来说，虽然像素不及，但是给人的感受还是有过之无不及。但是近几年各家的在相机的努力上让苹果感到不安，终于在今年，升级了摄像头。但是我上面说过，摄像头的成像质量是一代比一代强的，稳步提升。从4S升级800W到前代的6，那么几代的历练和沉淀才终于练出好的算法好的软件。那么初代的1200W会是什么样子呢，不得而知，也许苹果升级的计划早已开始，测试可能已经有几年了，但是还是引用语句老话&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;不要购买苹果的初代产品  &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;虽然iPhone不是初代，但是摄像头是初代，我觉得冒这个险不值得，这是第一个不买的原因。&lt;/p&gt;
+&lt;h1 id=&quot;Live-Photo&quot;&gt;&lt;a href=&quot;#Live-Photo&quot; class=&quot;headerlink&quot; title=&quot;Live Photo&quot;&gt;&lt;/a&gt;Live Photo&lt;/h1&gt;&lt;p&gt;说道这个功能，我想起了很多的知乎上的段子。自行脑补了以下情景。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A：这是我新买的iPhone6S，它又一个新功能叫Live Photo，拍摄的照片会动哦！&lt;br&gt;B：我的国产安卓手机早就有这个功能了啊。&lt;br&gt;A：你骗人，这是苹果的新技术！你的是山寨的吧。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;以上，自己体会吧。&lt;/p&gt;
+&lt;h1 id=&quot;硬件&quot;&gt;&lt;a href=&quot;#硬件&quot; class=&quot;headerlink&quot; title=&quot;硬件&quot;&gt;&lt;/a&gt;硬件&lt;/h1&gt;&lt;p&gt;搭载全新的A9芯片，每次发布新的iPhone，芯片都是会提升的，而且介绍的句式总是这样的，速度比上一代快了XX%,图像处理能力比上一代提升了XX%，这次不例外，还是介绍到&lt;code&gt;CPU速度比A8提升80%，GPU性能提升90%。&lt;/code&gt;听着总是会嫌弃自己手机的，但是说到底这个速度真的能体会到吗？实际是不能的，你买个手机来刷刷微博，发发微信，就是A6都能满足，如果不是高强度的使用，怎么可能会体验得到速度提升带来的畅快。特别每次发布新手机必然会发布新的iOS，新的系统会不怀好意的故意让你之前的手机卡顿，逼着你换手机，升级之后关闭验证，如果不是一个懂技术知道备份的人，根本不可能再刷回去低版本。这就是苹果鸡贼的地方。说实话要是现在有一个5运行iOS6的话，绝对是不会卡顿的，要升级的话，到8就已经能卡出翔了。所以我觉得硬件的提升是好事，但是不到让一个理性的消费者会有迫不及待的感觉。&lt;/p&gt;
+&lt;h1 id=&quot;3D-Touch&quot;&gt;&lt;a href=&quot;#3D-Touch&quot; class=&quot;headerlink&quot; title=&quot;3D Touch&quot;&gt;&lt;/a&gt;3D Touch&lt;/h1&gt;&lt;p&gt;作为Force Touch的升级，重新命名为3D Touch，就是屏幕能感应按压的力度，然后做出不同的响应。首先说说我对Force Touch的体验，在MacBook的触控板上，这个功能超级鸡肋，Chrome没有适配（也许是API没有开放），并不好用，起作用的仅仅是苹果的自带的应用，但是日常生活中这些应用使用的频率很低。在6S上，邮件、短信、相机、地图的适配很炫酷，但是仔细一看菜单，还是会发现缺了一点什么感觉，不够便利，不够本土化，话说回来，这些功能在天朝也有更优秀的应用来代替。&lt;/p&gt;
+&lt;h1 id=&quot;新一代的Touch-ID&quot;&gt;&lt;a href=&quot;#新一代的Touch-ID&quot; class=&quot;headerlink&quot; title=&quot;新一代的Touch ID&quot;&gt;&lt;/a&gt;新一代的Touch ID&lt;/h1&gt;&lt;p&gt;说道指纹解锁，5S刚发布的时候，确实是惊艳全世界，特别是一些隐私政策和后面的API开。各种应用的使用，让消费者和笔者都感觉到了指纹识别技术的方便之处，用的放心，用的舒心。因为苹果的成功，国内外很多厂商各式各样的指纹解锁方案陆续推出，现在的状况是各家的旗舰机如果没有指纹识别都不敢说自己是旗舰机。  &lt;/p&gt;
+&lt;p&gt;这次的Touch ID升级，重点说的是提升识别速度，但是我有有一个疑问，我看了那么多的旗舰机的测频，解锁速度优于苹果的没几个，有优势的最多都市零点几秒的差距，使用的时候真的能感知到吗？在众多的测评网站拿到手机测评之前，我有一个疑问，这个识别速度的提升真的有什么卵用吗？识别的步骤苹果也经过优化，在手指碰到金属圈的时候识别就开始，当点亮屏幕的时候识别其实已经完成了，直接就开锁了，真的不知道这个有什么卵用。当然这个只是我的猜测，万一有那么零点几秒的用呢，我也觉得我不差那零点几秒。零点几秒你打不了哈欠，动不了手指。&lt;/p&gt;
+&lt;h1 id=&quot;容量&quot;&gt;&lt;a href=&quot;#容量&quot; class=&quot;headerlink&quot; title=&quot;容量&quot;&gt;&lt;/a&gt;容量&lt;/h1&gt;&lt;p&gt;容量的问题，在6代的时候就发生了一点小变化，切掉了32GB的版本，起步为16GB，中间跳到64GB。虽然之前传言，是要切了16GB的版本，直接起步32GB。但是我很早就听说这个消息是假的，后来还有很多傻逼的微信公众号在说，真的不知道这些小编为啥要坑一些平时不关注的小白，然后让小白来和我据“理”力争。  &lt;/p&gt;
+&lt;p&gt;回到正题，上面说了摄像头和新功能的升级，应用程序的新功能的加入，一个人使用的APP数量也在增加，16GB已经完全不够用，那为什么苹果还是16GB起步呢，因为鸡贼呗。多的不说，这一点感觉恶心，如果是想扩容（并不是全部扩容，部分实现），买一个闪迪的U盘，那个价格也不便宜。&lt;/p&gt;
+&lt;h1 id=&quot;新配色&quot;&gt;&lt;a href=&quot;#新配色&quot; class=&quot;headerlink&quot; title=&quot;新配色&quot;&gt;&lt;/a&gt;新配色&lt;/h1&gt;&lt;p&gt;早些时候看到有人说，买6S一定得买粉色，不然谁知道你是6S。玩笑归玩笑，但是这是我觉得唯一的能说服人去买新手机的理由了。相比以上，这一点无不足道，除非你就是有钱。&lt;/p&gt;
+&lt;h1 id=&quot;最后再说两句&quot;&gt;&lt;a href=&quot;#最后再说两句&quot; class=&quot;headerlink&quot; title=&quot;最后再说两句&quot;&gt;&lt;/a&gt;最后再说两句&lt;/h1&gt;&lt;p&gt;说到底，除了粉红色，没什么能够产生动力去买新的iPhone，这一点女生肯定就很喜欢，笔者作为一个男性，只能呵呵。今年的iPhone对近两年的iPhone用户来说，确实没什么购买的必要，毕竟每次的S是优化，提升，大招还是下一代。如果你是土豪，有钱人，就是想装这个B，那就买吧，当我在放屁。苹果上一年在世界的销量平稳，中国的销量提升70%，这不是空穴来风，只是想说，首发没在中国，还能做出这个成绩，厉害！&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;声明&quot;&gt;&lt;a href=&quot;#声明&quot; class=&quot;headerlink&quot; title=&quot;声明&quot;&gt;&lt;/a&gt;声明&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;以下都属于个人感受，利益无关，如有不足欢迎指正，如有意见欢迎讨论，版权所有禁止一切形式的转载&lt;/strong&gt;&lt;/p&gt;
+&lt;h
+    
+    </summary>
+    
+      <category term="科技相关" scheme="http://yoursite.com/categories/%E7%A7%91%E6%8A%80%E7%9B%B8%E5%85%B3/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Mac os X 配置hexo教程</title>
+    <link href="http://yoursite.com/2015/09/09/Mac-os-X-%E9%85%8D%E7%BD%AEhexo%E6%95%99%E7%A8%8B/"/>
+    <id>http://yoursite.com/2015/09/09/Mac-os-X-配置hexo教程/</id>
+    <published>2015-09-09T11:24:19.000Z</published>
+    <updated>2015-09-11T14:31:32.000Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;自己做博客是因为朋友发现hexo这一好用的东西之后做出来的作品看着非常不错，就自己也试着做，想着以后还是需要这个东西。自己是SC专业的学生，平时有空的话可以写一些自己的学习的心得体会，毕竟还是学了很多东西的，有时候学了就很快忘记，还是记下来来得快。作为一个技术博客，写一些东西对自己以后找工作也是很有好处的。&lt;/p&gt;
+&lt;p&gt;由于自己在做的时候是用的MAC上面配置的，网上很多的技术博客信息不全，或者方法不一样，造成了很多的“坑”。但是为了配置，必须要保持冷静，然后好好利用&lt;a href=&quot;www.google.com.hk&quot;&gt;google&lt;/a&gt;.本文是我根据自己的电脑的实际情况来写的，如果有什么不足之处或者错误之处，欢迎指正，谢谢。&lt;/p&gt;
+&lt;h1 id=&quot;先整理一下思路&quot;&gt;&lt;a href=&quot;#先整理一下思路&quot; class=&quot;headerlink&quot; title=&quot;先整理一下思路&quot;&gt;&lt;/a&gt;先整理一下思路&lt;/h1&gt;&lt;p&gt;1.首先hexo是基于&lt;code&gt;nodejs&lt;/code&gt;，所以需要安装nodejs（之前没有安装过的话）。&lt;br&gt;2.安装nodejs的方法很多的，因为为了简单，而且网上的很多教程也是用的homebrew安装方式，我也就用的这个。&lt;br&gt;3.安装&lt;code&gt;homebrew&lt;/code&gt;方式很简单，因为mac自带了&lt;code&gt;ruby&lt;/code&gt;，一句话就能搞定。&lt;br&gt;4.hexo提交部署需要git部署到github，所以需要安装git工具。&lt;br&gt;5.整理一下安装顺序，&lt;strong&gt;（homebrew-nodejs-hexo-git）&lt;/strong&gt;  &lt;/p&gt;
+&lt;h1 id=&quot;1-安装homebrew&quot;&gt;&lt;a href=&quot;#1-安装homebrew&quot; class=&quot;headerlink&quot; title=&quot;1.安装homebrew&quot;&gt;&lt;/a&gt;1.安装homebrew&lt;/h1&gt;&lt;p&gt;打开终端，输入下面代码：  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ruby -e &amp;quot;$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)&amp;quot;  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;稍等片刻安装完成就可以了，因为正在下载，如果没有网速的话，可以关闭或者按下‘Ctrk+C’来结束进程并重新下载。值得注意的是输入这行代码也可能会提醒你输入的过旧，需要输入新的代码，只用复制那段代码然后轻敲回车就OK。  &lt;/p&gt;
+&lt;h1 id=&quot;2-安装nodejs&quot;&gt;&lt;a href=&quot;#2-安装nodejs&quot; class=&quot;headerlink&quot; title=&quot;2.安装nodejs&quot;&gt;&lt;/a&gt;2.安装nodejs&lt;/h1&gt;&lt;p&gt;用homebrew安装，一句话搞定。 &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;brew install node  
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&quot;3-安装hexo&quot;&gt;&lt;a href=&quot;#3-安装hexo&quot; class=&quot;headerlink&quot; title=&quot;3.安装hexo&quot;&gt;&lt;/a&gt;3.安装hexo&lt;/h1&gt;&lt;p&gt;可以使用nodejs自带的&lt;code&gt;npm&lt;/code&gt;进行安装。  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;npm install -g hexo
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;3-1创建hexo文件夹&quot;&gt;&lt;a href=&quot;#3-1创建hexo文件夹&quot; class=&quot;headerlink&quot; title=&quot;3.1创建hexo文件夹&quot;&gt;&lt;/a&gt;3.1创建hexo文件夹&lt;/h2&gt;&lt;p&gt;待安装完成之后，在自己想要的位置新建一个文件夹，例如在根目录新建。打开终端输入：  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;mkdir blog  
+cd blog  
+hexo init
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;3-2安装依赖包&quot;&gt;&lt;a href=&quot;#3-2安装依赖包&quot; class=&quot;headerlink&quot; title=&quot;3.2安装依赖包&quot;&gt;&lt;/a&gt;3.2安装依赖包&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;npm install
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&quot;4-安装git&quot;&gt;&lt;a href=&quot;#4-安装git&quot; class=&quot;headerlink&quot; title=&quot;4.安装git&quot;&gt;&lt;/a&gt;4.安装git&lt;/h1&gt;&lt;p&gt;安装好之后建议注册一个&lt;code&gt;github&lt;/code&gt;账号，如果没有的话。&lt;/p&gt;
+&lt;h2 id=&quot;4-1homebrew安装&quot;&gt;&lt;a href=&quot;#4-1homebrew安装&quot; class=&quot;headerlink&quot; title=&quot;4.1homebrew安装&quot;&gt;&lt;/a&gt;4.1homebrew安装&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;sudo brew install git
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;4-2配置&quot;&gt;&lt;a href=&quot;#4-2配置&quot; class=&quot;headerlink&quot; title=&quot;4.2配置&quot;&gt;&lt;/a&gt;4.2配置&lt;/h2&gt;&lt;h3 id=&quot;4-2-1检查SSH-key&quot;&gt;&lt;a href=&quot;#4-2-1检查SSH-key&quot; class=&quot;headerlink&quot; title=&quot;4.2.1检查SSH key&quot;&gt;&lt;/a&gt;4.2.1检查SSH key&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;cd ~/.ssh
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&quot;4-2-2备份已有的key&quot;&gt;&lt;a href=&quot;#4-2-2备份已有的key&quot; class=&quot;headerlink&quot; title=&quot;4.2.2备份已有的key&quot;&gt;&lt;/a&gt;4.2.2备份已有的key&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;mkdir key_backup
+mv id_rsa* key_backup  
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&quot;4-2-3生成SSH-key&quot;&gt;&lt;a href=&quot;#4-2-3生成SSH-key&quot; class=&quot;headerlink&quot; title=&quot;4.2.3生成SSH key&quot;&gt;&lt;/a&gt;4.2.3生成SSH key&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;ssh-keygen -t rsa -C &amp;quot;xxxx@xxxx.com&amp;quot;   
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;xxxx@xxxx为自己的github账号。&lt;/p&gt;
+&lt;h3 id=&quot;4-2-4将SSH-key添加到github&quot;&gt;&lt;a href=&quot;#4-2-4将SSH-key添加到github&quot; class=&quot;headerlink&quot; title=&quot;4.2.4将SSH key添加到github&quot;&gt;&lt;/a&gt;4.2.4将SSH key添加到github&lt;/h3&gt;&lt;p&gt;登录到gitHub页面，Account Settings-&amp;gt;SSH Public Keys-&amp;gt;Add another key将生成的key(id_rsa.pub文件）内容copy到输入框中，save。id_rsa.pub文件放在.ssh这个隐藏文件夹之下，因为当前就在这个目录，所以直接打开。  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ls  
+open id_rsa.pub
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;打开这个文件推荐使用&lt;code&gt;Sublime Text 2&lt;/code&gt;(下同),复制里面的东西，然后到在网页上保存。&lt;/p&gt;
+&lt;h3 id=&quot;4-2-5测试连接&quot;&gt;&lt;a href=&quot;#4-2-5测试连接&quot; class=&quot;headerlink&quot; title=&quot;4.2.5测试连接&quot;&gt;&lt;/a&gt;4.2.5测试连接&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;ssh git@github.com
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;如果现实连接成功，那就可以，不可以请重复以上步骤，找出错误的原因，或者把显示的错误信息代码复制到谷歌上面搜索。&lt;/p&gt;
+&lt;h3 id=&quot;4-2-6设置个人信息&quot;&gt;&lt;a href=&quot;#4-2-6设置个人信息&quot; class=&quot;headerlink&quot; title=&quot;4.2.6设置个人信息&quot;&gt;&lt;/a&gt;4.2.6设置个人信息&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;git config --global user.name &amp;quot;xxx”
+git config --global user.email &amp;quot;xxx@xxx.com&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;xxx&lt;/strong&gt;是你自己的&lt;code&gt;github&lt;/code&gt;的账号，&lt;strong&gt;xxx@xxx.com&lt;/strong&gt;是注册邮箱。&lt;/p&gt;
+&lt;h1 id=&quot;5创建github上面的repository&quot;&gt;&lt;a href=&quot;#5创建github上面的repository&quot; class=&quot;headerlink&quot; title=&quot;5创建github上面的repository&quot;&gt;&lt;/a&gt;5创建github上面的repository&lt;/h1&gt;&lt;p&gt;在自己的github主页右下角，创建一个新的&lt;code&gt;repositpry&lt;/code&gt;。我的github账号是maodahua，那么我就应该创建的repository名字为&lt;code&gt;maodahua.github.io&lt;/code&gt;.&lt;/p&gt;
+&lt;h1 id=&quot;6部署&quot;&gt;&lt;a href=&quot;#6部署&quot; class=&quot;headerlink&quot; title=&quot;6部署&quot;&gt;&lt;/a&gt;6部署&lt;/h1&gt;&lt;p&gt;在自己创建的&lt;code&gt;blog&lt;/code&gt;下找到&lt;code&gt;_config.yml&lt;/code&gt;这个文件并编辑，在最下面添加如下的语句。网址的&lt;em&gt;maodahua&lt;/em&gt;替换成自己账号即可。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;deploy:
+  type: git
+  repository: http://github.com/maodahua/maodahua.github.io.git
+  branch: master
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;PS:&lt;/strong&gt;三个冒号之后需要留一个空格，不然会引起错误。&lt;/p&gt;
+&lt;p&gt;至此，hexo博客的搭建已经完成，接下来可以执行下面代码在本地运行,查看效果  &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cd blog  
+hexo g
+hexo s
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然后在浏览器中输入&lt;code&gt;localhost:4000&lt;/code&gt;就可以看到了。&lt;br&gt;如果没有错误的话，可以执行&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;hexo d
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;完成之后，我们的博客就完全搭建起来了。在浏览器中输入&lt;code&gt;maodahua.github.io&lt;/code&gt;就可以访问了，去看看你的成果吧！&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;自己做博客是因为朋友发现hexo这一好用的东西之后做出来的作品看着非常不错，就自己也试着做，想着以后还是需要这个东西。自己是SC专业的学生，
+    
+    </summary>
+    
+      <category term="blog" scheme="http://yoursite.com/categories/blog/"/>
+    
+    
+  </entry>
+  
+</feed>
