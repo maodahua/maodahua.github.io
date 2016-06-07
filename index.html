@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hexo</title>
+  <title>maodahua</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
+  <meta name="description" content="Some of my knowledge.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
+<meta property="og:title" content="maodahua">
 <meta property="og:url" content="http://yoursite.com/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description">
+<meta property="og:site_name" content="maodahua">
+<meta property="og:description" content="Some of my knowledge.">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-<meta name="twitter:description">
+<meta name="twitter:title" content="maodahua">
+<meta name="twitter:description" content="Some of my knowledge.">
   
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="maodahua" type="application/atom+xml">
   
   
   <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
@@ -34,8 +34,12 @@
     </div>
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
+        <a href="/" id="logo">maodahua</a>
       </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Write the code.</a>
+        </h2>
       
     </div>
     <div id="header-menu">
@@ -141,7 +145,7 @@ RewriteRule $ / [R=204]
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/06/06/原生安卓6-0“去感叹号”/" data-id="cip2u7wxj0009910185atekdb" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/06/06/原生安卓6-0“去感叹号”/" data-id="cip3s4bh00009jd013chqdsm4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -222,7 +226,7 @@ WantedBy=multi-user.target
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/04/17/CentOS7上自定义系统服务/" data-id="cip2u7wx200009101g0hzgdou" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/04/17/CentOS7上自定义系统服务/" data-id="cip3s4bgl0000jd010287v2q2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -314,7 +318,7 @@ exit 0
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/10/19/mac下tomcat安装与配置/" data-id="cip2u7wxe00059101piut7g1m" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/10/19/mac下tomcat安装与配置/" data-id="cip3s4bgv0004jd01hnego3yy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -324,308 +328,10 @@ exit 0
 
 
   
-    <article id="post-SMTP协议-cmd下命令发送邮件" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/10/04/SMTP协议-cmd下命令发送邮件/" class="article-date">
-  <time datetime="2015-10-04T14:42:40.000Z" itemprop="datePublished">2015-10-04</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/计算机网络/">计算机网络</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/04/SMTP协议-cmd下命令发送邮件/">SMTP协议-cmd下命令发送邮件</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="什么是SMTP"><a href="#什么是SMTP" class="headerlink" title="什么是SMTP"></a>什么是SMTP</h1><p><code>SMTP（Simple Mail Transfer Protocol）</code>即简单邮件传输协议,它是一组用于由源地址到目的地址传送邮件的规则，由它来控制信件的中转方式。SMTP协议属于TCP/IP协议簇，它帮助每台计算机在发送或中转信件时找到下一个目的地。通过SMTP协议所指定的服务器,就可以把E-mail寄到收信人的服务器上了，整个过程只要几分钟。SMTP服务器则是遵循SMTP协议的发送邮件服务器，用来发送或中转发出的电子邮件。<br><img src="http://images.cnitblog.com/blog/41574/201302/21145823-faabf336788e4db8b4ec605eb89a10d5.jpg" alt="">  </p>
-<hr>
-<h1 id="命令行使用SMTP"><a href="#命令行使用SMTP" class="headerlink" title="命令行使用SMTP"></a>命令行使用SMTP</h1><p>PS：下面的操作是在<code>Windows</code>系统上的，OS X上没有测试，所以请使用Windows来进行下面的操作，以保证结果的正确性。  </p>
-<h3 id="开始正题"><a href="#开始正题" class="headerlink" title="开始正题"></a>开始正题</h3><p>首先按下<code>win</code>+<code>R</code>这个组合键，然后在框里面输入<code>cmd</code><br><img src="https://raw.githubusercontent.com/maodahua/maodahua.github.io/master/image/1.jpg" alt=""><br>按一下<code>回车</code>出现如下窗口，进入命令行模式<br><img src="https://raw.githubusercontent.com/maodahua/maodahua.github.io/master/image/2.jpg" alt="">  </p>
-<hr>
-<h4 id="远程登录"><a href="#远程登录" class="headerlink" title="远程登录"></a>远程登录</h4><p>在命令窗口输入<code>telnet smtp.qq.com 25</code>(这里以QQ邮箱为例，其他的邮箱请再网上搜索SMTP地址。25表示建立连接的端口号，SMTP默认为25)然后回车，你将会看到如下欢迎页,各个邮箱有所不同。到了这一步之后的操作字母是不能输错的，因为你的每一次按键实际上已经被传送到服务器，所以输入错误时不能使用退格键删除，只能换行<strong>重新输入</strong><br><img src="https://raw.githubusercontent.com/maodahua/maodahua.github.io/master/image/4.jpg" alt="">  </p>
-<hr>
-<h4 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h4><p>输入<code>helo qq.com</code>回车，这是向服务器表明你的身份，如果返回<code>250</code>则表示服务器认可了你的身份。再输入 <code>auth login</code>回车，也就是告诉服务器需要输入用户名进行登录<br><img src="https://raw.githubusercontent.com/maodahua/maodahua.github.io/master/image/5.jpg" alt=""><br>此时服务器会返回一个<code>334</code>。表示可以输入用户名了，但是注意，这里的用户名需要编码之后才能被识别。也就是说我的邮箱用户名是<code>289203021@qq.com</code>，我需要将这个字符串经过base64编码之后才能使用，关于这个编码，可以点击<a href="http://base64.xpcha.com/" target="_blank" rel="external">这里</a>进行编码。然后复制编码的结果。粘贴到命令窗口当中，然后回车，服务器还会返回一个<code>334</code>信息，接着输入邮箱的密码，同样的密码也需要编码，粘贴进去之后回车。<br>PS:命令行不可以使用快捷键粘贴，需要右键点击窗口的标题栏，在编辑这个选项中找到粘贴。<br><img src="https://raw.githubusercontent.com/maodahua/maodahua.github.io/master/image/7.jpg" alt=""><br>如图，返回了一个<code>235</code>表示登陆成功。  </p>
-<hr>
-<h4 id="写信"><a href="#写信" class="headerlink" title="写信"></a>写信</h4><p>输入<code>mail from:&lt;&gt;</code> &lt;&gt;中填写发件人邮箱，也就是自己登陆的邮箱<br>输入<code>rcpt to:&lt;&gt;</code> &lt;&gt;中填写收件人邮箱<br>输入<code>data</code>回车，回车之后就开始输入右键的内容<br>下面是data的可选项（虽然是可选项，但是由于邮箱的不同，会出现退信的可能，QQ邮箱的话建议全写上，注意不要写错，不然很麻烦）：<br>输入<code>from:</code>发件人名称，将显示在发件箱的<code>收件人</code>一栏<br>输入<code>to:</code>收件人名称，将显示在收件箱的<code>收件人</code>一栏<br>输入<code>subject:</code>新建主题，显示在收件箱<code>主题</code>一栏<br>以上每输入一项按一下回车，在<code>subject</code>下面需要空一行，也就是输入完subject之后按两下回车。<br>空行开始就是信件的正文内容。<br>在里面输入你想要发送的东西，然后回车，在新的一行使用.（英文输入法的句号）结束并发送。<br><img src="https://raw.githubusercontent.com/maodahua/maodahua.github.io/master/image/8.jpg" alt=""><br>发送成功后服务器会返回<code>250 OK</code>，与此同时，我已经收到了邮件<br><img src="https://raw.githubusercontent.com/maodahua/maodahua.github.io/master/image/9.jpg" alt="">  </p>
-<hr>
-<h1 id="最后说明"><a href="#最后说明" class="headerlink" title="最后说明"></a>最后说明</h1><p>有的想输入在信件中输入汉字的，有的可以支持直接输入，有的不能直接输入，不能输入的可以通过粘贴进去。以上的关于学习<em>计算机网络</em>这门课中的SMTP协议之后的手动操作，如有疑问，欢迎联系<code>mdh@maodahua.com</code></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/10/04/SMTP协议-cmd下命令发送邮件/" data-id="cip2u7wxb000391012lmfjk6x" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Windows配置hexo教程" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/10/03/Windows配置hexo教程/" class="article-date">
-  <time datetime="2015-10-03T07:50:44.000Z" itemprop="datePublished">2015-10-03</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/blog/">blog</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/03/Windows配置hexo教程/">Windows配置hexo教程</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Hexo安装方法"><a href="#Hexo安装方法" class="headerlink" title="Hexo安装方法"></a>Hexo安装方法</h1><hr>
-<h2 id="一、下载Git"><a href="#一、下载Git" class="headerlink" title="一、下载Git"></a>一、下载Git</h2><p><a href="http://git-for-windows.github.io" target="_blank" rel="external">msysGit下载地址</a></p>
-<p>进入上面的页面,点击<code>Download</code>会进入下载页面，找到<code>Downloads</code>部分，根据自己系统的情况选择下载32位或者64位的安装包，下载完成后进行安装。</p>
-<h2 id="二、下在Node-js"><a href="#二、下在Node-js" class="headerlink" title="二、下在Node.js"></a>二、下在Node.js</h2><p><a href="http://nodejs.org" target="_blank" rel="external">Node.js下载地址</a><br>同样进入上面的界面，点击<code>INSTALL</code>下载安装包，下载完成后并安装。</p>
-<h2 id="三、安装Hexo"><a href="#三、安装Hexo" class="headerlink" title="三、安装Hexo"></a>三、安装Hexo</h2><p>完成上面两步后，此时当我们在桌面点击鼠标右键时，会有一系列新的选项，这里我们需要用到的<code>Git Bash</code>，接下来我们会用命令行来完成剩余的工作。</p>
-<h3 id="1-安装Hexo"><a href="#1-安装Hexo" class="headerlink" title="1.安装Hexo"></a>1.安装Hexo</h3><p>根据上面的方法，打开<code>Git Bash</code>控制台，之后系统会打开一个窗口，窗口内是黑色的背景和一堆英文，看不懂没有关系跟着步骤一步一步做就行。</p>
-<p>在控制台中输入以下命令：</p>
-<pre><code>npm install -g hexo
-</code></pre><p>之后系统会自动去<code>Git</code>上下载并安装<code>Hexo</code>，接下来会一直循环显示/-\这三个符号，这表示系统在下载需要的文件。</p>
-<p>但是根据笔者遇到的情况，使用<code>npm</code>安装可能会出现卡住的现象导致无法正常安装，解决的办法就是修改<code>npm</code>的安装源，大家可以选择以下方法中的一个即可（正常下载的朋友就略过这里）</p>
-<ol>
-<li><p>通过config命令：</p>
-<pre><code>npm config set registry http://registry.cnpmjs.org 
-
-   npm info underscore
-</code></pre></li>
-<li><p>通过命令行指定</p>
-<pre><code>npm -registry http://registry.cnpmjs.org     info underscore
-</code></pre></li>
-</ol>
-<p>然后再来执行一次最开始的命令：</p>
-<pre><code>npm install -g hexo
-</code></pre><p>耐心等待一会儿，<code>Hexo</code>就下载好了。</p>
-<h3 id="2-生成Hexo静态博客"><a href="#2-生成Hexo静态博客" class="headerlink" title="2.生成Hexo静态博客"></a>2.生成Hexo静态博客</h3><ol>
-<li><p>选一个适合的地方存放博客文件</p>
-<p><code>cd</code>命令可以在命令行中快速指定到一个地址，比如：</p>
-<pre><code>cd D:\
-
-D:
-</code></pre><p>这样可以快速的指定要一个地址上去，然后是创建一个文件夹进行归类管理</p>
-<pre><code>mkdir blog
-</code></pre><p>这样在D盘我们就创建了一个名字为<code>blog</code>的文件夹。接下来我们在进入<code>blog</code>文件夹中，同样使用<code>cd</code>命令。</p>
-<pre><code>cd blog
-</code></pre><p>此时我们进入了我们选好的地址中，执行以下命令：</p>
-<pre><code>hexo init
-</code></pre><p>然后你会看到以下的反馈：</p>
-<pre><code>[info] Copying data
-
-[info] You are almost done! Don&apos;t forget to run &apos;npm install&apos;...
-</code></pre><p>所以接下来就要执行</p>
-<pre><code>npm install
-</code></pre><p>等待他完成后我们可以进去到文件夹中看到以下目录：</p>
-<ul>
-<li><code>node_modules</code>： Hexo的功能JavaScript文件    </li>
-<li><code>public</code>：生成静态网页文件</li>
-<li><code>scaffolds</code>：工具模板</li>
-<li><code>source</code>：<ul>
-<li><code>/_drafts</code>-草稿文件夹</li>
-<li><code>/_posts</code>-文章文件夹</li>
-</ul>
-</li>
-<li><code>themes</code>：用来存放皮肤的文件夹</li>
-<li><code>_config.yml</code>：全局配置文件</li>
-<li><code>db.json</code>：json格式的静态常量数据库</li>
-</ul>
-</li>
-</ol>
-<ol>
-<li>查看生成的静态网页</li>
-</ol>
-<p>进入到blog的地址后，执行如下的命令：</p>
-<p><code>hexo generate</code> 用来生成静态网页相关的文件，这些文件会存储在<code>public</code>中，也可使用简单的命令<code>hexo g</code></p>
-<p>然后再输入<code>hexo server</code>或者<code>hexo s</code>这样可以在本地查看自己生成的网页，现在打开浏览器（推荐使用的浏览器是<code>Chrome</code>和<code>FireFox</code>）,在地址栏输入<code>localhost:4000</code>或者点击<a href="http://localhost:4000" target="_blank" rel="external">这里</a></p>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><hr>
-<p>最初始的工作就做完了，下一步的任务就是如何吧网页托管到<code>GitHub</code>上，这样别人也能开你的博客了。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/10/03/Windows配置hexo教程/" data-id="cip2u7wxd00049101mh50slir" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-为什么不买iPhone6S" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/09/14/为什么不买iPhone6S/" class="article-date">
-  <time datetime="2015-09-14T14:55:25.000Z" itemprop="datePublished">2015-09-14</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/科技相关/">科技相关</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/14/为什么不买iPhone6S/">为什么不买iPhone6S</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h1><p><strong>以下都属于个人感受，利益无关，如有不足欢迎指正，如有意见欢迎讨论，版权所有禁止一切形式的转载</strong></p>
-<h1 id="首先说说感受"><a href="#首先说说感受" class="headerlink" title="首先说说感受"></a>首先说说感受</h1><p>笔者作为一个痴迷电子产品的小伙，在之前已经用过很多Apple Inc.的很多产品。本月十号凌晨一点，苹果在美国举办秋季发布会，发布了一大波东西，让人眼花缭乱，我还是眼睛都不眨的看到了接近四点。首先声明我是果粉，看完发布会之后感觉根本睡不着，脑海里面还在回想发布的东西会给生活带来什么便利，以后的办公会多么的便捷，这些问题萦绕在我的脑海，让我很期待。特别是最后压轴出场的iPhone6S和iPhone6S Plus。更是带了了很多新的技术，虽然之前已经被曝光的差不多了，到了发布的时候，依然那么的新鲜。但是为什么本文的标题是不买6S（代指iPhone6S和iPhone6S Plus，为方便后文都这样称呼），我将从手机的各个方面详细讲解。</p>
-<h1 id="相机"><a href="#相机" class="headerlink" title="相机"></a>相机</h1><p>早有传言此次发布的新手机将升级摄像头，毕竟在三星等厂商的压力之下，升级摄像头的像素是当务之急。回想过去几代的iPhone，升级到800W时，一年比一年的优化做得好，一代比一代的成像质量和水品都在稳步提升，比起其他厂商高像素的手机来说，虽然像素不及，但是给人的感受还是有过之无不及。但是近几年各家的在相机的努力上让苹果感到不安，终于在今年，升级了摄像头。但是我上面说过，摄像头的成像质量是一代比一代强的，稳步提升。从4S升级800W到前代的6，那么几代的历练和沉淀才终于练出好的算法好的软件。那么初代的1200W会是什么样子呢，不得而知，也许苹果升级的计划早已开始，测试可能已经有几年了，但是还是引用语句老话</p>
-<blockquote>
-<p>不要购买苹果的初代产品  </p>
-</blockquote>
-<p>虽然iPhone不是初代，但是摄像头是初代，我觉得冒这个险不值得，这是第一个不买的原因。</p>
-<h1 id="Live-Photo"><a href="#Live-Photo" class="headerlink" title="Live Photo"></a>Live Photo</h1><p>说道这个功能，我想起了很多的知乎上的段子。自行脑补了以下情景。</p>
-<blockquote>
-<p>A：这是我新买的iPhone6S，它又一个新功能叫Live Photo，拍摄的照片会动哦！<br>B：我的国产安卓手机早就有这个功能了啊。<br>A：你骗人，这是苹果的新技术！你的是山寨的吧。</p>
-</blockquote>
-<p>以上，自己体会吧。</p>
-<h1 id="硬件"><a href="#硬件" class="headerlink" title="硬件"></a>硬件</h1><p>搭载全新的A9芯片，每次发布新的iPhone，芯片都是会提升的，而且介绍的句式总是这样的，速度比上一代快了XX%,图像处理能力比上一代提升了XX%，这次不例外，还是介绍到<code>CPU速度比A8提升80%，GPU性能提升90%。</code>听着总是会嫌弃自己手机的，但是说到底这个速度真的能体会到吗？实际是不能的，你买个手机来刷刷微博，发发微信，就是A6都能满足，如果不是高强度的使用，怎么可能会体验得到速度提升带来的畅快。特别每次发布新手机必然会发布新的iOS，新的系统会不怀好意的故意让你之前的手机卡顿，逼着你换手机，升级之后关闭验证，如果不是一个懂技术知道备份的人，根本不可能再刷回去低版本。这就是苹果鸡贼的地方。说实话要是现在有一个5运行iOS6的话，绝对是不会卡顿的，要升级的话，到8就已经能卡出翔了。所以我觉得硬件的提升是好事，但是不到让一个理性的消费者会有迫不及待的感觉。</p>
-<h1 id="3D-Touch"><a href="#3D-Touch" class="headerlink" title="3D Touch"></a>3D Touch</h1><p>作为Force Touch的升级，重新命名为3D Touch，就是屏幕能感应按压的力度，然后做出不同的响应。首先说说我对Force Touch的体验，在MacBook的触控板上，这个功能超级鸡肋，Chrome没有适配（也许是API没有开放），并不好用，起作用的仅仅是苹果的自带的应用，但是日常生活中这些应用使用的频率很低。在6S上，邮件、短信、相机、地图的适配很炫酷，但是仔细一看菜单，还是会发现缺了一点什么感觉，不够便利，不够本土化，话说回来，这些功能在天朝也有更优秀的应用来代替。</p>
-<h1 id="新一代的Touch-ID"><a href="#新一代的Touch-ID" class="headerlink" title="新一代的Touch ID"></a>新一代的Touch ID</h1><p>说道指纹解锁，5S刚发布的时候，确实是惊艳全世界，特别是一些隐私政策和后面的API开。各种应用的使用，让消费者和笔者都感觉到了指纹识别技术的方便之处，用的放心，用的舒心。因为苹果的成功，国内外很多厂商各式各样的指纹解锁方案陆续推出，现在的状况是各家的旗舰机如果没有指纹识别都不敢说自己是旗舰机。  </p>
-<p>这次的Touch ID升级，重点说的是提升识别速度，但是我有有一个疑问，我看了那么多的旗舰机的测频，解锁速度优于苹果的没几个，有优势的最多都市零点几秒的差距，使用的时候真的能感知到吗？在众多的测评网站拿到手机测评之前，我有一个疑问，这个识别速度的提升真的有什么卵用吗？识别的步骤苹果也经过优化，在手指碰到金属圈的时候识别就开始，当点亮屏幕的时候识别其实已经完成了，直接就开锁了，真的不知道这个有什么卵用。当然这个只是我的猜测，万一有那么零点几秒的用呢，我也觉得我不差那零点几秒。零点几秒你打不了哈欠，动不了手指。</p>
-<h1 id="容量"><a href="#容量" class="headerlink" title="容量"></a>容量</h1><p>容量的问题，在6代的时候就发生了一点小变化，切掉了32GB的版本，起步为16GB，中间跳到64GB。虽然之前传言，是要切了16GB的版本，直接起步32GB。但是我很早就听说这个消息是假的，后来还有很多傻逼的微信公众号在说，真的不知道这些小编为啥要坑一些平时不关注的小白，然后让小白来和我据“理”力争。  </p>
-<p>回到正题，上面说了摄像头和新功能的升级，应用程序的新功能的加入，一个人使用的APP数量也在增加，16GB已经完全不够用，那为什么苹果还是16GB起步呢，因为鸡贼呗。多的不说，这一点感觉恶心，如果是想扩容（并不是全部扩容，部分实现），买一个闪迪的U盘，那个价格也不便宜。</p>
-<h1 id="新配色"><a href="#新配色" class="headerlink" title="新配色"></a>新配色</h1><p>早些时候看到有人说，买6S一定得买粉色，不然谁知道你是6S。玩笑归玩笑，但是这是我觉得唯一的能说服人去买新手机的理由了。相比以上，这一点无不足道，除非你就是有钱。</p>
-<h1 id="最后再说两句"><a href="#最后再说两句" class="headerlink" title="最后再说两句"></a>最后再说两句</h1><p>说到底，除了粉红色，没什么能够产生动力去买新的iPhone，这一点女生肯定就很喜欢，笔者作为一个男性，只能呵呵。今年的iPhone对近两年的iPhone用户来说，确实没什么购买的必要，毕竟每次的S是优化，提升，大招还是下一代。如果你是土豪，有钱人，就是想装这个B，那就买吧，当我在放屁。苹果上一年在世界的销量平稳，中国的销量提升70%，这不是空穴来风，只是想说，首发没在中国，还能做出这个成绩，厉害！</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/09/14/为什么不买iPhone6S/" data-id="cip2u7wxh00079101qzsuiqlc" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Mac-os-X-配置hexo教程" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/09/09/Mac-os-X-配置hexo教程/" class="article-date">
-  <time datetime="2015-09-09T11:24:19.000Z" itemprop="datePublished">2015-09-09</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/blog/">blog</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/09/Mac-os-X-配置hexo教程/">Mac os X 配置hexo教程</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>自己做博客是因为朋友发现hexo这一好用的东西之后做出来的作品看着非常不错，就自己也试着做，想着以后还是需要这个东西。自己是SC专业的学生，平时有空的话可以写一些自己的学习的心得体会，毕竟还是学了很多东西的，有时候学了就很快忘记，还是记下来来得快。作为一个技术博客，写一些东西对自己以后找工作也是很有好处的。</p>
-<p>由于自己在做的时候是用的MAC上面配置的，网上很多的技术博客信息不全，或者方法不一样，造成了很多的“坑”。但是为了配置，必须要保持冷静，然后好好利用<a href="www.google.com.hk">google</a>.本文是我根据自己的电脑的实际情况来写的，如果有什么不足之处或者错误之处，欢迎指正，谢谢。</p>
-<h1 id="先整理一下思路"><a href="#先整理一下思路" class="headerlink" title="先整理一下思路"></a>先整理一下思路</h1><p>1.首先hexo是基于<code>nodejs</code>，所以需要安装nodejs（之前没有安装过的话）。<br>2.安装nodejs的方法很多的，因为为了简单，而且网上的很多教程也是用的homebrew安装方式，我也就用的这个。<br>3.安装<code>homebrew</code>方式很简单，因为mac自带了<code>ruby</code>，一句话就能搞定。<br>4.hexo提交部署需要git部署到github，所以需要安装git工具。<br>5.整理一下安装顺序，<strong>（homebrew-nodejs-hexo-git）</strong>  </p>
-<h1 id="1-安装homebrew"><a href="#1-安装homebrew" class="headerlink" title="1.安装homebrew"></a>1.安装homebrew</h1><p>打开终端，输入下面代码：  </p>
-<pre><code>ruby -e &quot;$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)&quot;  
-</code></pre><p>稍等片刻安装完成就可以了，因为正在下载，如果没有网速的话，可以关闭或者按下‘Ctrk+C’来结束进程并重新下载。值得注意的是输入这行代码也可能会提醒你输入的过旧，需要输入新的代码，只用复制那段代码然后轻敲回车就OK。  </p>
-<h1 id="2-安装nodejs"><a href="#2-安装nodejs" class="headerlink" title="2.安装nodejs"></a>2.安装nodejs</h1><p>用homebrew安装，一句话搞定。 </p>
-<pre><code>brew install node  
-</code></pre><h1 id="3-安装hexo"><a href="#3-安装hexo" class="headerlink" title="3.安装hexo"></a>3.安装hexo</h1><p>可以使用nodejs自带的<code>npm</code>进行安装。  </p>
-<pre><code>npm install -g hexo
-</code></pre><h2 id="3-1创建hexo文件夹"><a href="#3-1创建hexo文件夹" class="headerlink" title="3.1创建hexo文件夹"></a>3.1创建hexo文件夹</h2><p>待安装完成之后，在自己想要的位置新建一个文件夹，例如在根目录新建。打开终端输入：  </p>
-<pre><code>mkdir blog  
-cd blog  
-hexo init
-</code></pre><h2 id="3-2安装依赖包"><a href="#3-2安装依赖包" class="headerlink" title="3.2安装依赖包"></a>3.2安装依赖包</h2><pre><code>npm install
-</code></pre><h1 id="4-安装git"><a href="#4-安装git" class="headerlink" title="4.安装git"></a>4.安装git</h1><p>安装好之后建议注册一个<code>github</code>账号，如果没有的话。</p>
-<h2 id="4-1homebrew安装"><a href="#4-1homebrew安装" class="headerlink" title="4.1homebrew安装"></a>4.1homebrew安装</h2><pre><code>sudo brew install git
-</code></pre><h2 id="4-2配置"><a href="#4-2配置" class="headerlink" title="4.2配置"></a>4.2配置</h2><h3 id="4-2-1检查SSH-key"><a href="#4-2-1检查SSH-key" class="headerlink" title="4.2.1检查SSH key"></a>4.2.1检查SSH key</h3><pre><code>cd ~/.ssh
-</code></pre><h3 id="4-2-2备份已有的key"><a href="#4-2-2备份已有的key" class="headerlink" title="4.2.2备份已有的key"></a>4.2.2备份已有的key</h3><pre><code>mkdir key_backup
-mv id_rsa* key_backup  
-</code></pre><h3 id="4-2-3生成SSH-key"><a href="#4-2-3生成SSH-key" class="headerlink" title="4.2.3生成SSH key"></a>4.2.3生成SSH key</h3><pre><code>ssh-keygen -t rsa -C &quot;xxxx@xxxx.com&quot;   
-</code></pre><p>xxxx@xxxx为自己的github账号。</p>
-<h3 id="4-2-4将SSH-key添加到github"><a href="#4-2-4将SSH-key添加到github" class="headerlink" title="4.2.4将SSH key添加到github"></a>4.2.4将SSH key添加到github</h3><p>登录到gitHub页面，Account Settings-&gt;SSH Public Keys-&gt;Add another key将生成的key(id_rsa.pub文件）内容copy到输入框中，save。id_rsa.pub文件放在.ssh这个隐藏文件夹之下，因为当前就在这个目录，所以直接打开。  </p>
-<pre><code>ls  
-open id_rsa.pub
-</code></pre><p>打开这个文件推荐使用<code>Sublime Text 2</code>(下同),复制里面的东西，然后到在网页上保存。</p>
-<h3 id="4-2-5测试连接"><a href="#4-2-5测试连接" class="headerlink" title="4.2.5测试连接"></a>4.2.5测试连接</h3><pre><code>ssh git@github.com
-</code></pre><p>如果现实连接成功，那就可以，不可以请重复以上步骤，找出错误的原因，或者把显示的错误信息代码复制到谷歌上面搜索。</p>
-<h3 id="4-2-6设置个人信息"><a href="#4-2-6设置个人信息" class="headerlink" title="4.2.6设置个人信息"></a>4.2.6设置个人信息</h3><pre><code>git config --global user.name &quot;xxx”
-git config --global user.email &quot;xxx@xxx.com&quot;
-</code></pre><p><strong>xxx</strong>是你自己的<code>github</code>的账号，<strong>xxx@xxx.com</strong>是注册邮箱。</p>
-<h1 id="5创建github上面的repository"><a href="#5创建github上面的repository" class="headerlink" title="5创建github上面的repository"></a>5创建github上面的repository</h1><p>在自己的github主页右下角，创建一个新的<code>repositpry</code>。我的github账号是maodahua，那么我就应该创建的repository名字为<code>maodahua.github.io</code>.</p>
-<h1 id="6部署"><a href="#6部署" class="headerlink" title="6部署"></a>6部署</h1><p>在自己创建的<code>blog</code>下找到<code>_config.yml</code>这个文件并编辑，在最下面添加如下的语句。网址的<em>maodahua</em>替换成自己账号即可。</p>
-<pre><code>deploy:
-  type: git
-  repository: http://github.com/maodahua/maodahua.github.io.git
-  branch: master
-</code></pre><p><strong>PS:</strong>三个冒号之后需要留一个空格，不然会引起错误。</p>
-<p>至此，hexo博客的搭建已经完成，接下来可以执行下面代码在本地运行,查看效果  </p>
-<pre><code>cd blog  
-hexo g
-hexo s
-</code></pre><p>然后在浏览器中输入<code>localhost:4000</code>就可以看到了。<br>如果没有错误的话，可以执行</p>
-<pre><code>hexo d
-</code></pre><p>完成之后，我们的博客就完全搭建起来了。在浏览器中输入<code>maodahua.github.io</code>就可以访问了，去看看你的成果吧！</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/09/09/Mac-os-X-配置hexo教程/" data-id="cip2u7wx600019101szsmansg" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
   
 </section>
         
@@ -634,7 +340,7 @@ hexo s
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 John Doe<br>
+      &copy; 2016 ML<br>
       <a href="https://github.com/ken8203/hexo-theme-alberta" target="_blank">Alberta</a> by <a href="http://jaychung.tw" target="_blank">jaychung</a>. Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Thank <a href="http://subtlepatterns.com/" target="_blank">Subtlepatterns</a>
     </div>
   </div>
